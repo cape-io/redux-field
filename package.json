@@ -1,5 +1,5 @@
 {
-  "name": "edit-field",
+  "name": "redux-field",
   "version": "1.0.0",
   "description": "Redux form field reducer and actions.",
   "homepage": "https://github.com/cape-io/redux-field",
