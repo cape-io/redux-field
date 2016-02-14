@@ -3,6 +3,9 @@ import get from 'lodash/get'
 import invert from 'lodash/invert'
 import isFunction from 'lodash/isFunction'
 import isString from 'lodash/isString'
+import isUndefined from 'lodash/isUndefined'
+
+export connectField from './connectField'
 
 export const BLUR = 'field/BLUR'
 export const CLEAR = 'field/CLEAR'
@@ -175,7 +178,7 @@ export function getActions(formId, fieldId) {
       meta,
     }
     if (error) action.error = error
-    if (payload) action.payload = payload
+    if (!isUndefined(payload)) action.payload = payload
     return action
   }
   function blur(eventOrValue) {
