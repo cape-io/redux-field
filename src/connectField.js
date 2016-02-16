@@ -3,9 +3,13 @@ import { connect } from 'react-redux'
 
 import { getActions, getState } from './index'
 
+function _selectForm(state) {
+  return state.form
+}
 // This gets state and actions for a specific field. That is all.
 // The formId and fieldId can be sent via init as an object or with props on each instance.
 export default function connectField(options = {}) {
+  const { selectForm = _selectForm } = options
   function getInfo(ownProps) {
     return {
       formId: ownProps.formId || options.formId || 'default',
@@ -18,7 +22,7 @@ export default function connectField(options = {}) {
     function mapStateToProps(state, ownProps) {
       const { formId, fieldId, validate } = getInfo(ownProps)
       return {
-        form: getState(state.form, formId, fieldId, validate),
+        form: getState(selectForm(state), formId, fieldId, validate),
       }
     }
     function mapDispatchToProps(dispatch, ownProps) {

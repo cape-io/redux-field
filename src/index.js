@@ -33,7 +33,7 @@ const defaultFormState = {}
 const defaultState = immutable({
   blur: false, // When true the field is open but does not have focus.
   error: null, // String usually. Could be object for more complex error.
-  fieldId: null, // String.
+  // fieldId: null, // String.
   focus: false, // When true the field is open and it has focus.
   initalValue: null, // Anything.
   meta: null, // Object.
@@ -61,6 +61,9 @@ export default function reducer(_state = defaultFormState, action) {
   let newState = false
   // Ignore all actions that do not have a meta prefix that matches the one passed on creation.
   switch (action.type) {
+    case BLUR:
+      newState = state.set('blur', true)
+      break
     case CLEAR:
       newState = defaultState
       break
@@ -87,7 +90,7 @@ export default function reducer(_state = defaultFormState, action) {
     case OPEN:
       newState = state.merge({
         focus: true,
-        fieldId: action.payload.fieldId,
+        // fieldId: action.payload.fieldId,
         initalValue: state.initalValue || action.payload.initalValue,
         value: state.value || action.payload.initalValue,
       })
@@ -165,8 +168,8 @@ export function getState(formState, formId, fieldId, validate) {
 }
 export function getValue(thing) {
   if (!thing) return thing
-  if (thing.target && thing.target.value) {
-    return thing.target.value
+  if (thing.target && thing.nativeEvent) {
+    return thing.target.value || ''
   }
   return thing
 }
