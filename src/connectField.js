@@ -20,9 +20,9 @@ export default function connectField(options = {}) {
   // Pass in a component and it will get connected for you.
   return Component => {
     function mapStateToProps(state, ownProps) {
-      const { formId, fieldId, validate } = getInfo(ownProps)
+      const { formId, fieldId, validate, initialValue } = getInfo(ownProps)
       return {
-        form: getState(selectForm(state), formId, fieldId, validate),
+        form: getState(selectForm(state), formId, fieldId, validate, initialValue),
       }
     }
     function mapDispatchToProps(dispatch, ownProps) {

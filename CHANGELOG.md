@@ -1,3 +1,8 @@
+## [1.3.0]
+> 2016-02-19
+
+* `initialValue` can be sent as prop to the `Component` of `conntectField()(Component)`.
+
 ## [1.2.0]
 > 2016-02-16
 

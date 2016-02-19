@@ -132,7 +132,7 @@ export default function reducer(_state = defaultFormState, action) {
 
 // Validate function should return a string
 // or object { message: String, suggestion: String, status: String }
-export function derivedState(state, validate) {
+export function derivedState(state, validate, initialValue) {
   const errorVal = isFunction(validate) ? (validate(state.value) || state.help) : state.error
   const pristine = state.value === state.initalValue
   let status = errorVal ? 'error' : null
@@ -149,6 +149,7 @@ export function derivedState(state, validate) {
     errorMessage: errorVal && errorVal.message ? errorVal.message : errorVal,
     // The field is open.
     hasError: !!errorVal,
+    initialValue: state.initialValue || initialValue,
     open: state.blur || state.focus,
     pristine,
     saved: pristine || state.value === state.savedValue,
@@ -161,10 +162,10 @@ function getPrefix(formId, fieldId) {
   return [ formId, fieldId ]
 }
 
-export function getState(formState, formId, fieldId, validate) {
+export function getState(formState, formId, fieldId, validate, initialValue) {
   const prefix = getPrefix(formId, fieldId)
   const fieldState = getFieldState(formState, prefix)
-  return derivedState(fieldState, validate)
+  return derivedState(fieldState, validate, initialValue)
 }
 export function getValue(thing) {
   if (!thing) return thing
