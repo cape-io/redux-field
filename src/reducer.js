@@ -9,7 +9,7 @@ import {
 } from './actions'
 
 // Only keeping state we can not calculate. See derivedState().
-const defaultState = immutable({
+export const defaultState = immutable({
   blur: false, // When true the field is open but does not have focus.
   error: null, // String usually. Could be object for more complex error.
   focus: false, // When true the field is open and it has focus.
@@ -26,7 +26,7 @@ const defaultState = immutable({
 export const reducers = {
   [CLEAR]: () => defaultState,
   [CLEAR_ERROR]: (state) => state.set('error', defaultState.error),
-  // Should close also change value to initialValue?
+  // Should close also change initialValue?
   [CLOSE]: (state) => state.merge({ blur: defaultState.blur, focus: defaultState.focus }),
   [ERROR]: (state, action) => state.merge({ error: action.payload }),
   [INVALID]: (state, action) =>
@@ -34,7 +34,7 @@ export const reducers = {
   [META]: (state, action) => state.set('meta', action.payload),
   [OPEN]: (state, action) => state.merge({
     focus: true,
-    id: action.payload.id,
+    id: action.payload.id || defaultState.id,
     initalValue: state.initalValue || action.payload.initalValue,
     value: state.value || action.payload.initalValue,
   }),
