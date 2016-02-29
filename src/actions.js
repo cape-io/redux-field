@@ -1,6 +1,6 @@
-import partialRight from 'lodash/partial'
-import reduce from 'lodash/reduce'
-import set from 'lodash/set'
+import mapKeys from 'lodash/mapKeys'
+import mapValues from 'lodash/mapValues'
+import partial from 'lodash/partial'
 
 import { createAction } from './utils'
 
@@ -33,6 +33,11 @@ export const saved = createAction(SAVED)
 export const VALID = 'field/VALID'
 export const valid = createAction(VALID)
 
+// Redux-field events:
+export const fieldEvent = {
+  clear, clearError, close, error, invalid, meta, open, save, saved, valid,
+}
+
 // FORM & FOCUS EVENTS
 export const BLUR = 'field/BLUR'
 export const onBlur = createAction(BLUR)
@@ -41,30 +46,22 @@ export const CHANGE = 'field/CHANGE'
 export const onChange = createAction(CHANGE)
 // When a user clicks on a field to edit it.
 export const FOCUS = 'field/FOCUS'
-export const onFucus = createAction(FOCUS)
+export const onFocus = createAction(FOCUS)
 // Alias of onChange.
 export const onInput = onChange
 // Submit, close, save.
 export const SUBMIT = 'field/SUBMIT'
 export const onSubmit = createAction(SUBMIT)
 
-export function getActions(...args) {
-  // Form and focus events:
-  const form = [
-    'onBlur', 'onChange', 'onFocus', 'onInput', 'onSubmit',
-  ]
-  // Redux-field events:
-  const field = [
-    'clear', 'clearError', 'close', 'error', 'invalid', 'meta', 'open', 'save', 'saved', 'valid',
-  ]
-  function wrap(func) {
-    return partialRight(func, ...args)
-  }
+// Form and focus events:
+export const formEvent = {
+  onBlur, onChange, onFocus, onInput, onSubmit,
+}
+export const formHandler = mapKeys(formEvent, (val, key) => key.replace('on', 'handle'))
+
+export function getActions(prefix) {
   // Object of actions.
-  return {
-    fieldEvent: reduce(field, (result, funcId) => set(result, funcId, wrap(funcId)), {}),
-    formEvent: reduce(form, (result, funcId) => set(result, funcId, wrap(funcId)), {}),
-    formHandler: reduce(form, (result, funcId) =>
-      set(result, funcId.replace('on', 'handle'), wrap(funcId)), {}),
-  }
+  const wrap = (acts) => mapValues(acts, func => partial(func, prefix))
+  const actions = { fieldEvent, formEvent, formHandler }
+  return mapValues(actions, wrap)
 }

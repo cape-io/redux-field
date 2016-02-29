@@ -1,4 +1,6 @@
-export const emptyGetStateResult = {
+import immutable from 'seamless-immutable'
+
+export const emptyGetStateResult = immutable({
   blur: false,
   error: null,
   focus: false,
@@ -20,4 +22,13 @@ export const emptyGetStateResult = {
   status: null,
   suggestion: null,
   isValid: false,
-}
+})
+export const formEvent = [
+  'onBlur', 'onChange', 'onFocus', 'onInput', 'onSubmit',
+]
+export const formHandler = [
+  'handleBlur', 'handleChange', 'handleFocus', 'handleInput', 'handleSubmit',
+]
+export const fieldEvent = [
+  'clear', 'clearError', 'close', 'error', 'invalid', 'meta', 'open', 'save', 'saved', 'valid',
+]
