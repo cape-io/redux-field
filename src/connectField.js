@@ -1,26 +1,15 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import get from 'lodash/get'
-import isString from 'lodash/isString'
 
-import { getActions, getState, selectForm } from './index'
+import { getActions, getPrefix, getState } from './index'
 
-export function getInfo(props) {
-  const { prefix } = props
-  return {
-    prefix: isString(prefix) ? prefix.split('.') : prefix || [ 'default' ],
-    selectForm: props.selectForm || selectForm,
-    validate: get(props, [ 'field', 'validate' ], props.validate),
-  }
-}
 export function mapStateToProps(state, ownProps) {
-  const { initialValue, prefix, validate } = getInfo(ownProps)
   return {
-    form: getState(ownProps.selectForm(state), prefix, validate, initialValue),
+    form: getState(state, ownProps),
   }
 }
 export function mapDispatchToProps(dispatch, ownProps) {
-  const { prefix } = getInfo(ownProps)
+  const prefix = getPrefix(ownProps.prefix)
   const { fieldEvent, formEvent, formHandler } = getActions(prefix)
   return {
     fieldEvent: bindActionCreators(fieldEvent, dispatch),
