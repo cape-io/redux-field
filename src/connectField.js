@@ -5,26 +5,27 @@ import isString from 'lodash/isString'
 
 import { getActions, getState, selectForm } from './index'
 
-export function mapStateToProps(state, ownProps) {
-  const { initialValue, prefix, selectFormState, validate } = ownProps
+export function getInfo(props) {
+  const { prefix } = props
   return {
-    form: getState(selectFormState(state), prefix, validate, initialValue),
+    prefix: isString(prefix) ? prefix.split('.') : prefix || [ 'default' ],
+    selectForm: props.selectForm || selectForm,
+    validate: get(props, [ 'field', 'validate' ], props.validate),
   }
 }
-export function mapDispatchToProps(dispatch, { prefix }) {
+export function mapStateToProps(state, ownProps) {
+  const { initialValue, prefix, validate } = getInfo(ownProps)
+  return {
+    form: getState(ownProps.selectForm(state), prefix, validate, initialValue),
+  }
+}
+export function mapDispatchToProps(dispatch, ownProps) {
+  const { prefix } = getInfo(ownProps)
   const { fieldEvent, formEvent, formHandler } = getActions(prefix)
   return {
     fieldEvent: bindActionCreators(fieldEvent, dispatch),
     formEvent: bindActionCreators(formEvent, dispatch),
     formHandler: bindActionCreators(formHandler, dispatch),
-  }
-}
-export function getInfo(ownProps, options = {}) {
-  const prefix = ownProps.prefix || options.prefix || [ 'default' ]
-  return {
-    prefix: isString(prefix) ? prefix.split('.') : prefix,
-    selectFormState: options.selectForm || selectForm,
-    validate: get(ownProps, [ 'field', 'validate' ], options.validate),
   }
 }
 // This gets state and actions for a specific field. That is all.
@@ -33,9 +34,9 @@ export default function connectField(options) {
   // Pass in a component and it will get connected for you.
   return Component => {
     const mapProps = (state, props) =>
-      mapStateToProps(state, getInfo(props, options))
+      mapStateToProps(state, { ...options, ...props })
     const mapDispatch = (dispatch, props) =>
-      mapDispatchToProps(dispatch, getInfo(props, options))
+      mapDispatchToProps(dispatch, { ...options, ...props })
     return connect(mapProps, mapDispatch)(Component)
   }
 }
