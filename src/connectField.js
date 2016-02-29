@@ -2,6 +2,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
 import { getActions, getState } from './index'
+import { selectForm as _selectForm } from './select'
 
 // This gets state and actions for a specific field. That is all.
 // The formId and fieldId can be sent via init as an object or with props on each instance.
@@ -19,13 +20,16 @@ export default function connectField(options = {}) {
     function mapStateToProps(state, ownProps) {
       const { formId, fieldId, validate, initialValue } = getInfo(ownProps)
       return {
-        form: getState(selectForm(state), formId, fieldId, validate, initialValue),
+        form: getState(selectForm(state), [ formId, fieldId ], validate, initialValue),
       }
     }
     function mapDispatchToProps(dispatch, ownProps) {
       const { formId, fieldId } = getInfo(ownProps)
+      const { fieldEvent, formEvent, formHandler } = getActions(formId, fieldId)
       return {
-        action: bindActionCreators(getActions(formId, fieldId), dispatch),
+        fieldEvent: bindActionCreators(fieldEvent, dispatch),
+        formEvent: bindActionCreators(formEvent, dispatch),
+        formHandler: bindActionCreators(formHandler, dispatch),
       }
     }
     return connect(mapStateToProps, mapDispatchToProps)(Component)
