@@ -2,7 +2,8 @@
 > 2016-02-28
 
 * Actions are now split into groups. `fieldEvent` contains all actions related to field state. `formEvent` are form and focus events like `onChange`. `formHandler` a clone of `formEvent` where the keys replace `on` with `handle` like `handleBlur` instead of `onBlur`.
-* 
+* Removed concept of `formId` and `fieldId` in everything except `connectField`.
+* Added `valid` and `invalid` actions and related state keys. Should be used to store async results to values.
 
 ## [1.4.0]
 > 2016-02-23

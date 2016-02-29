@@ -1,6 +1,7 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
+
 import { getActions, getState } from './index'
 import { selectForm as _selectForm } from './select'
 

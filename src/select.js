@@ -4,24 +4,23 @@ import isFunction from 'lodash/isFunction'
 export function selectForm(state) {
   return state.form
 }
-// Validate function should return a string
-// or object { message: String, suggestion: String, status: String }
+// Validate function should return a string or object
+// error: { message: String, suggestion: String, status: String }
 export function derivedState(state, validate, initialValue) {
-  const errorVal = isFunction(validate) ? (validate(state.value) || state.help) : state.error
+  const errorVal = isFunction(validate) ? validate(state.value) : state.error
   const pristine = state.value === state.initalValue
   let status = errorVal ? 'error' : null
   if (errorVal && errorVal.status) {
     status = errorVal.status
   }
-  const valid = !errorVal && !pristine
-  if (valid) {
+  const isValid = !errorVal && !pristine
+  if (isValid) {
     status = 'success'
   }
   return state.merge({
     editing: state.focus && !pristine,
     dirty: !pristine,
     errorMessage: errorVal && errorVal.message ? errorVal.message : errorVal,
-    // The field is open.
     hasError: !!errorVal,
     initialValue: state.initialValue || initialValue,
     open: state.blur || state.focus,
@@ -29,7 +28,7 @@ export function derivedState(state, validate, initialValue) {
     saved: pristine || state.value === state.savedValue,
     status,
     suggestion: errorVal && errorVal.suggestion ? errorVal.suggestion : undefined,
-    valid,
+    isValid,
   })
 }
 export function getState(formState, prefix, validate, initialValue) {

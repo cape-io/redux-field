@@ -1,10 +1,13 @@
 import immutable from 'seamless-immutable'
 import get from 'lodash/get'
+import isArray from 'lodash/isArray'
 import isFunction from 'lodash/isFunction'
+
 import {
   CLEAR, CLEAR_ERROR, CLOSE, ERROR, INVALID, META, OPEN, SAVE, SAVED, VALID,
   BLUR, CHANGE, FOCUS, SUBMIT,
 } from './actions'
+
 // Only keeping state we can not calculate. See derivedState().
 const defaultState = immutable({
   blur: false, // When true the field is open but does not have focus.
@@ -19,6 +22,7 @@ const defaultState = immutable({
   valid: {}, // index of valid values.
   value: null, // Anything.
 })
+
 export const reducers = {
   [CLEAR]: () => defaultState,
   [CLEAR_ERROR]: (state) => state.set('error', defaultState.error),
@@ -41,6 +45,7 @@ export const reducers = {
     saving: defaultState.saving,
     savedValue: action.payload,
   }),
+  // This is another spot you could save meta data about a particular value.
   [VALID]: (state, action) => state.setIn([ 'valid', action.payload.key ], action.payload.value),
   [BLUR]: (state, action) =>
     state.merge({ blur: true, focus: false, value: action.payload || state.value }),
@@ -55,12 +60,11 @@ export const reducers = {
   }),
 }
 export default function reducer(_state = {}, action) {
-  const prefix = action.meta && action.meta.prefix
-  if (!prefix || !action.type) return _state
-  // Used during rehydration.
-  const formState = _state.asMutable ? _state : immutable(_state)
+  if (!action.meta || !action.type || !isFunction(reducers[action.type])) return _state
+  if (!isArray(action.meta.prefix)) throw new Error('Action must contain meta.prefix array.')
+  // Used after rehydration.
+  const state = _state.asMutable ? _state : immutable(_state)
   // Get the state slice we need for this action.
-  const state = get(formState, prefix, defaultState)
-  const newState = isFunction(reducers[action.type]) ? reducers[action.type](state, action) : state
-  return formState.setIn(prefix, newState)
+  const fieldState = get(state, action.meta.prefix, defaultState)
+  return state.setIn(action.meta.prefix, reducers[action.type](fieldState, action))
 }
