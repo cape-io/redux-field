@@ -14,7 +14,7 @@ export const defaultState = immutable({
   error: null, // String usually. Could be object for more complex error.
   focus: false, // When true the field is open and it has focus.
   id: null, // String. Used as a unique key/id for this specific field value.
-  initalValue: null, // Anything.
+  initialValue: null, // Anything.
   invalid: {}, // index of invalid values.
   meta: null, // Anything.
   savedValue: null,
@@ -35,8 +35,8 @@ export const reducers = {
   [OPEN]: (state, action) => state.merge({
     focus: true,
     id: action.payload.id || defaultState.id,
-    initalValue: state.initalValue || action.payload.initalValue,
-    value: state.value || action.payload.initalValue,
+    initialValue: state.initialValue || action.payload.initialValue,
+    value: state.value || action.payload.initialValue,
   }),
   [SAVE]: (state) => state.set('saving', true),
   [SAVED]: (state, action) => state.merge({
