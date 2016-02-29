@@ -13,14 +13,18 @@ test('actions', t => {
     'clear()',
   )
   t.deepEqual(
-    action.clearError('fieldId'),
+    action.clearError('fieldId', ''),
     { meta: { prefix: [ 'fieldId' ] }, type: action.CLEAR_ERROR },
     'clearError()',
   )
   t.deepEqual(
-    action.close('fieldId'),
+    action.close('fieldId', 'yum'),
     { meta: { prefix: [ 'fieldId' ] }, type: action.CLOSE },
     'close()',
+  )
+  t.deepEqual(
+    action.onChange([ 'login', 'email' ], 'a'),
+    { meta: { prefix: [ 'login', 'email' ] }, type: action.CHANGE, payload: 'a' }
   )
   t.end()
 })

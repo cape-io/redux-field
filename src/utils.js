@@ -29,5 +29,5 @@ export function getPayload(prefix, payload) {
   return payloadCreatorDefault(payload)
 }
 export function createAction(type, hasPayload = true) {
-  return _createAction(type, hasPayload ? noop : getPayload, getMeta)
+  return _createAction(type, hasPayload ? getPayload : noop, getMeta)
 }
