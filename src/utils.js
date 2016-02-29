@@ -1,5 +1,18 @@
 import noop from 'lodash/noop'
 import _createAction, { payloadCreatorDefault } from './createAction'
+import isArray from 'lodash/isArray'
+import isEmpty from 'lodash/isEmpty'
+import isString from 'lodash/isString'
+
+export function getPrefix(prefix) {
+  if (prefix && isString(prefix)) {
+    return prefix.split('.')
+  }
+  if (isArray(prefix) && !isEmpty(prefix)) {
+    return prefix
+  }
+  return [ 'default' ]
+}
 
 export function getMeta(...args) {
   if (args[0] === null) {
