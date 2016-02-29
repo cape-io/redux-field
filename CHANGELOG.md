@@ -2,6 +2,7 @@
 > 2016-02-29
 
 * Actions are now split into groups. `fieldEvent` contains all actions related to field state. `formEvent` are form and focus events like `onChange`. `formHandler` a clone of `formEvent` where the keys replace `on` with `handle` like `handleBlur` instead of `onBlur`.
+* First arg to actions is a `prefix` array. Second arg is the payload.
 * Removed concept of `formId` and `fieldId` from everything in favor of a singular `prefix` array prop.
 * Added `valid` and `invalid` actions and related state keys. Should be used to store async results to values.
 

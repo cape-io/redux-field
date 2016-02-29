@@ -8,8 +8,8 @@ import { formEvent, formHandler, fieldEvent } from './mock'
 
 test('actions', t => {
   t.deepEqual(
-    action.clear(null, 'fieldId'),
-    { meta: { prefix: [ 'fieldId' ] }, type: action.CLEAR },
+    action.clear(),
+    { meta: { prefix: [ 'default' ] }, type: action.CLEAR },
     'clear()',
   )
   t.deepEqual(

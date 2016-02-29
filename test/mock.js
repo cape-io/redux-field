@@ -32,3 +32,9 @@ export const formHandler = [
 export const fieldEvent = [
   'clear', 'clearError', 'close', 'error', 'invalid', 'meta', 'open', 'save', 'saved', 'valid',
 ]
+export const nativeEvent = {
+  nativeEvent: true,
+  target: {
+    value: 'Kumbaya',
+  },
+}
