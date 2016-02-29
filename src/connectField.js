@@ -1,38 +1,41 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
+import isString from 'lodash/isString'
 
-import { getActions, getState } from './index'
-import { selectForm as _selectForm } from './select'
+import { getActions, getState, selectForm } from './index'
 
-// This gets state and actions for a specific field. That is all.
-// The formId and fieldId can be sent via init as an object or with props on each instance.
-export default function connectField(options = {}) {
-  const { selectForm = _selectForm } = options
-  function getInfo(ownProps) {
-    return {
-      formId: ownProps.formId || options.formId || 'default',
-      fieldId: ownProps.fieldId || get(ownProps, 'field.id', options.fieldId) || 'NO_FIELD_ID',
-      validate: get(ownProps, [ 'field', 'validate' ]),
-    }
+export function mapStateToProps(state, ownProps) {
+  const { initialValue, prefix, selectFormState, validate } = ownProps
+  return {
+    form: getState(selectFormState(state), prefix, validate, initialValue),
   }
+}
+export function mapDispatchToProps(dispatch, { prefix }) {
+  const { fieldEvent, formEvent, formHandler } = getActions(prefix)
+  return {
+    fieldEvent: bindActionCreators(fieldEvent, dispatch),
+    formEvent: bindActionCreators(formEvent, dispatch),
+    formHandler: bindActionCreators(formHandler, dispatch),
+  }
+}
+export function getInfo(ownProps, options = {}) {
+  const prefix = ownProps.prefix || options.prefix || [ 'default' ]
+  return {
+    prefix: isString(prefix) ? prefix.split('.') : prefix,
+    selectFormState: options.selectForm || selectForm,
+    validate: get(ownProps, [ 'field', 'validate' ], options.validate),
+  }
+}
+// This gets state and actions for a specific field. That is all.
+// The prefix can be sent via init option or with props on each instance.
+export default function connectField(options) {
   // Pass in a component and it will get connected for you.
   return Component => {
-    function mapStateToProps(state, ownProps) {
-      const { formId, fieldId, validate, initialValue } = getInfo(ownProps)
-      return {
-        form: getState(selectForm(state), [ formId, fieldId ], validate, initialValue),
-      }
-    }
-    function mapDispatchToProps(dispatch, ownProps) {
-      const { formId, fieldId } = getInfo(ownProps)
-      const { fieldEvent, formEvent, formHandler } = getActions(formId, fieldId)
-      return {
-        fieldEvent: bindActionCreators(fieldEvent, dispatch),
-        formEvent: bindActionCreators(formEvent, dispatch),
-        formHandler: bindActionCreators(formHandler, dispatch),
-      }
-    }
-    return connect(mapStateToProps, mapDispatchToProps)(Component)
+    const mapProps = (state, props) =>
+      mapStateToProps(state, getInfo(props, options))
+    const mapDispatch = (dispatch, props) =>
+      mapDispatchToProps(dispatch, getInfo(props, options))
+    return connect(mapProps, mapDispatch)(Component)
   }
 }

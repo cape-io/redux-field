@@ -1,7 +1,7 @@
 import test from 'tape'
 import * as action from '../src/actions'
 
-test('clear', t => {
+test('actions', t => {
   t.deepEqual(
     action.clear(null, 'fieldId'),
     { meta: { prefix: [ 'fieldId' ] }, type: action.CLEAR },
