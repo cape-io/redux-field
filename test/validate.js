@@ -5,3 +5,7 @@ export function isRequired(value) {
     return 'Required'
   }
 }
+
+export function invalidDomain() {
+  return 'invalid domain'
+}
