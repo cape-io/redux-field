@@ -1,4 +1,5 @@
 # redux-field
+[![Build Status](https://travis-ci.org/cape-io/redux-field.svg?branch=master)](https://travis-ci.org/cape-io/redux-field)
 
 For when you want to control individual form fields with redux. Think something like https://vitalets.github.io/x-editable/ for Redux.
 
