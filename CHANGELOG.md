@@ -7,6 +7,7 @@
 * Added `valid` and `invalid` actions and related state keys. Should be used to store async results to values.
 * Reducer is now exported as `fieldReducer` instead of default.
 * The `validate` props function is only called when `dirty`.
+* The `submit` action now expects the value to be passed as its payload. Same as `onChange`.
 
 ## [1.4.0]
 > 2016-02-23

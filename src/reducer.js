@@ -56,7 +56,7 @@ export const reducers = {
     error: defaultState.error,
     focus: defaultState.focus,
     saving: true,
-    value: action.payload.value || state.value,
+    value: action.payload || state.value,
   }),
 }
 export default function reducer(_state = {}, action) {
