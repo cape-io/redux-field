@@ -11,8 +11,8 @@ export function selectForm(state) {
 // error: { message: String, suggestion: String, status: String }
 export function derivedState(state, { validate, initialValue }) {
   const initVal = state.initialValue || initialValue || defaultState.initialValue
-  const errorVal = isFunction(validate) ? validate(state.value) : state.error
   const pristine = state.value === initVal
+  const errorVal = !pristine && isFunction(validate) ? validate(state.value) : state.error
   let status = errorVal ? 'error' : null
   if (errorVal && errorVal.status) {
     status = errorVal.status
