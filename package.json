@@ -1,6 +1,6 @@
 {
   "name": "redux-field",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Redux form field reducer and actions.",
   "homepage": "https://github.com/cape-io/redux-field",
   "author": "Kai Curry <kai@cape.io> (http://www.cape.io/)",
