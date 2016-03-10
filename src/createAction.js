@@ -17,7 +17,7 @@ export default function createAction(type, payloadCreator, metaCreator) {
     const payload = getPayload(...args)
     if (!isUndefined(payload)) action.payload = payload
     // Handle FSA errors where the payload is an Error object or has error prop. Set error.
-    if (isError(args[0]) || args[0].error || args[0].isBoom) {
+    if (args[0] && (isError(args[0]) || args[0].error || args[0].isBoom)) {
       action.error = true
     }
     if (isFunction(metaCreator)) {
