@@ -1,5 +1,6 @@
 import mapKeys from 'lodash/mapKeys'
 import mapValues from 'lodash/mapValues'
+import memoize from 'lodash/memoize'
 import partial from 'lodash/partial'
 
 import { createAction } from './utils'
@@ -59,9 +60,9 @@ export const formEvent = {
 }
 export const formHandler = mapKeys(formEvent, (val, key) => key.replace('on', 'handle'))
 
-export function getActions(prefix) {
-  // Object of actions.
+function _getActions(prefix) {
   const wrap = (acts) => mapValues(acts, func => partial(func, prefix))
   const actions = { fieldEvent, formEvent, formHandler }
   return mapValues(actions, wrap)
 }
+export const getActions = memoize(_getActions, (prefix) => prefix.toString())
