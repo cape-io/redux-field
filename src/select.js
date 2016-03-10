@@ -47,9 +47,12 @@ export function derivedState(state, { initialValue, validate }) {
     valid: state.valid[state.value] || null,
   })
 }
-export function getState(state, props) {
+export function getFieldState(state, props) {
   const selectFormState = props.selectForm || selectForm
   const prefix = getPrefix(props.prefix)
-  const fieldState = get(selectFormState(state), prefix, defaultState)
+  return get(selectFormState(state), prefix, defaultState)
+}
+export function getState(state, props) {
+  const fieldState = getFieldState(state, props)
   return derivedState(fieldState, props)
 }
