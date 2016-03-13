@@ -63,7 +63,7 @@ export default function reducer(_state = {}, action) {
   if (!action.meta || !action.type || !isFunction(reducers[action.type])) return _state
   if (!isArray(action.meta.prefix)) throw new Error('Action must contain meta.prefix array.')
   // Used after rehydration.
-  const state = _state.asMutable ? _state : immutable(_state)
+  const state = _state.asMutable ? _state : defaultState.merge(_state)
   // Get the state slice we need for this action.
   const fieldState = get(state, action.meta.prefix, defaultState)
   return state.setIn(action.meta.prefix, reducers[action.type](fieldState, action))
