@@ -1,12 +1,7 @@
-## [2.1.2]
+## [2.1.3]
 > 2016-03-13
 
-* Actually merge in default state when there isn't any.
-
-## [2.1.1]
-> 2016-03-13
-
-* Fix a bug where `open()` fails when not sent an payload. Thinking the use of `id` state value is a mistake.
+* Fix a bug where `open()` fails when not sent a payload. Thinking the use of `id` state value is a mistake.
 
 ## [2.0.0]
 > 2016-03-01

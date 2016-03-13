@@ -32,11 +32,11 @@ export const reducers = {
   [INVALID]: (state, action) =>
     state.setIn([ 'invalid', action.payload.key ], action.payload.value),
   [META]: (state, action) => state.set('meta', action.payload),
-  [OPEN]: (state, action) => state.merge({
+  [OPEN]: (state, { payload }) => !payload ? state.set('focus', true) : state.merge({
     focus: true,
-    id: (action.paload && action.payload.id) || defaultState.id,
-    initialValue: state.initialValue || action.payload.initialValue,
-    value: state.value || action.payload.initialValue,
+    id: payload.id || defaultState.id,
+    initialValue: state.initialValue || payload.initialValue,
+    value: state.value || payload.initialValue,
   }),
   [SAVE]: (state) => state.set('saving', true),
   [SAVED]: (state, action) => state.merge({
@@ -63,7 +63,7 @@ export default function reducer(_state = {}, action) {
   if (!action.meta || !action.type || !isFunction(reducers[action.type])) return _state
   if (!isArray(action.meta.prefix)) throw new Error('Action must contain meta.prefix array.')
   // Used after rehydration.
-  const state = _state.asMutable ? _state : defaultState.merge(_state)
+  const state = _state.asMutable ? _state : immutable(_state)
   // Get the state slice we need for this action.
   const fieldState = get(state, action.meta.prefix, defaultState)
   return state.setIn(action.meta.prefix, reducers[action.type](fieldState, action))
