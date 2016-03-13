@@ -1,3 +1,8 @@
+## [2.1.2]
+> 2016-03-13
+
+* Actually merge in default state when there isn't any.
+
 ## [2.1.1]
 > 2016-03-13
 
