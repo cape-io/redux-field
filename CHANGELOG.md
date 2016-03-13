@@ -1,3 +1,8 @@
+## [2.1.1]
+> 2016-03-13
+
+* Fix a bug where `open()` fails when not sent an payload. Thinking the use of `id` state value is a mistake.
+
 ## [2.0.0]
 > 2016-03-01
 

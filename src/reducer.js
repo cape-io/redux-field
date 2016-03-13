@@ -34,7 +34,7 @@ export const reducers = {
   [META]: (state, action) => state.set('meta', action.payload),
   [OPEN]: (state, action) => state.merge({
     focus: true,
-    id: action.payload.id || defaultState.id,
+    id: (action.paload && action.payload.id) || defaultState.id,
     initialValue: state.initialValue || action.payload.initialValue,
     value: state.value || action.payload.initialValue,
   }),
