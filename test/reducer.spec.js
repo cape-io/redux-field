@@ -1,6 +1,6 @@
 import test from 'tape'
 
-import { close, fieldReducer as reducer, onChange, onSubmit, open } from '../src'
+import { close, fieldReducer as reducer, onChange, onSubmit, open, savedProgress } from '../src'
 import { defaultState } from '../src/reducer'
 
 test('reducer', t => {
@@ -28,5 +28,14 @@ test('open', t => {
   t.equal(get('focus'), true, 'focus')
   t.equal(get('value'), 'foo', 'value')
   t.equal(get('initialValue'), 'foo', 'initialValue')
+  t.end()
+})
+test('savedProgress', t => {
+  t.equal(defaultState.savedProgress, 0, 'defaultState')
+  function dispatch(action) {
+    const state = reducer(undefined, action)
+    t.equal(state.default.savedProgress, 10, 'savedProgress')
+  }
+  savedProgress(null, 10)(dispatch)
   t.end()
 })

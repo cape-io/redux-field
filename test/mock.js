@@ -13,6 +13,7 @@ export const emptyGetStateResult = immutable({
   invalid: null,
   isValid: false,
   meta: null,
+  savedProgress: 0,
   savedValue: null,
   saving: false,
   open: false,
@@ -23,14 +24,15 @@ export const emptyGetStateResult = immutable({
   valid: null,
   value: null,
 })
+export const fieldEvent = [
+  'clear', 'clearError', 'close', 'error', 'invalid',
+  'meta', 'open', 'save', 'saved', 'savedProgress', 'valid',
+]
 export const formEvent = [
   'onBlur', 'onChange', 'onFocus', 'onInput', 'onSubmit',
 ]
 export const formHandler = [
   'handleBlur', 'handleChange', 'handleFocus', 'handleInput', 'handleSubmit',
-]
-export const fieldEvent = [
-  'clear', 'clearError', 'close', 'error', 'invalid', 'meta', 'open', 'save', 'saved', 'valid',
 ]
 export const nativeEvent = {
   nativeEvent: true,

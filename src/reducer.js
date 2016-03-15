@@ -4,7 +4,7 @@ import isArray from 'lodash/isArray'
 import isFunction from 'lodash/isFunction'
 
 import {
-  CLEAR, CLEAR_ERROR, CLOSE, ERROR, INVALID, META, OPEN, SAVE, SAVED, VALID,
+  CLEAR, CLEAR_ERROR, CLOSE, ERROR, INVALID, META, OPEN, SAVE, SAVED_PROGRESS, SAVED, VALID,
   BLUR, CHANGE, FOCUS, SUBMIT,
 } from './actions'
 
@@ -17,6 +17,7 @@ export const defaultState = immutable({
   initialValue: null, // Anything.
   invalid: {}, // index of invalid values.
   meta: null, // Anything.
+  savedProgress: 0, // Percentage Number 0-99.
   savedValue: null,
   saving: false, // Bool.
   valid: {}, // index of valid values.
@@ -27,36 +28,37 @@ export const reducers = {
   [CLEAR]: () => defaultState,
   [CLEAR_ERROR]: (state) => state.set('error', defaultState.error),
   // Should close also change initialValue?
-  [CLOSE]: (state) => state.merge({ blur: defaultState.blur, focus: defaultState.focus }),
-  [ERROR]: (state, action) => state.merge({ error: action.payload }),
-  [INVALID]: (state, action) =>
-    state.setIn([ 'invalid', action.payload.key ], action.payload.value),
-  [META]: (state, action) => state.set('meta', action.payload),
-  [OPEN]: (state, { payload }) => !payload ? state.set('focus', true) : state.merge({
+  [CLOSE]: state => state.merge({ blur: defaultState.blur, focus: defaultState.focus }),
+  [ERROR]: (state, payload) => state.merge({ error: payload }),
+  [INVALID]: (state, payload) => state.setIn([ 'invalid', payload.key ], payload.value),
+  [META]: (state, payload) => state.set('meta', payload),
+  [OPEN]: (state, payload) => !payload ? state.set('focus', true) : state.merge({
     focus: true,
     id: payload.id || defaultState.id,
     initialValue: state.initialValue || payload.initialValue,
     value: state.value || payload.initialValue,
   }),
   [SAVE]: (state) => state.set('saving', true),
-  [SAVED]: (state, action) => state.merge({
+  [SAVED_PROGRESS]: (state, payload) => state.set('savedProgress', payload),
+  [SAVED]: (state, payload) => state.merge({
     error: defaultState.error,
-    id: action.payload && action.payload.id || state.id,
+    id: payload && payload.id || state.id,
     saving: defaultState.saving,
-    savedValue: action.payload,
+    savedProgress: defaultState.savedProgress,
+    savedValue: payload,
   }),
   // This is another spot you could save meta data about a particular value.
-  [VALID]: (state, action) => state.setIn([ 'valid', action.payload.key ], action.payload.value),
-  [BLUR]: (state, action) =>
-    state.merge({ blur: true, focus: false, value: action.payload || state.value }),
-  [CHANGE]: (state, action) => state.set('value', action.payload),
+  [VALID]: (state, payload) => state.setIn([ 'valid', payload.key ], payload.value),
+  [BLUR]: (state, payload) =>
+    state.merge({ blur: true, focus: false, value: payload || state.value }),
+  [CHANGE]: (state, payload) => state.set('value', payload),
   [FOCUS]: (state) => state.merge({ blur: false, focus: true }),
-  [SUBMIT]: (state, action) => state.merge({
+  [SUBMIT]: (state, payload) => state.merge({
     blur: defaultState.blur,
     error: defaultState.error,
     focus: defaultState.focus,
     saving: true,
-    value: action.payload || state.value,
+    value: payload || state.value,
   }),
 }
 export default function reducer(_state = {}, action) {
@@ -66,5 +68,5 @@ export default function reducer(_state = {}, action) {
   const state = _state.asMutable ? _state : immutable(_state)
   // Get the state slice we need for this action.
   const fieldState = get(state, action.meta.prefix, defaultState)
-  return state.setIn(action.meta.prefix, reducers[action.type](fieldState, action))
+  return state.setIn(action.meta.prefix, reducers[action.type](fieldState, action.payload))
 }
