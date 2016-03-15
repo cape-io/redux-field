@@ -28,6 +28,13 @@ test('actions', t => {
   )
   t.end()
 })
+test('savedProgress', t => {
+  function dispatch(expected) { return progress => t.deepEqual(progress, expected, 'dispatched') }
+  const act = { meta: { prefix: [ 'default' ] }, type: 'field/SAVED_PROGRESS', payload: 10 }
+  action.savedProgress(null, 10)(dispatch(act))
+  t.equal(action.savedProgress(null, 11)(t.fail), false, 'not multiple of 5.')
+  t.end()
+})
 test('action bundles', t => {
   t.deepEqual(functions(action.formEvent), formEvent, 'formEvent')
   t.deepEqual(functions(action.formHandler), formHandler, 'formHandler')

@@ -1,9 +1,10 @@
 import mapKeys from 'lodash/mapKeys'
+import isObject from 'lodash/isObject'
 import mapValues from 'lodash/mapValues'
 import memoize from 'lodash/memoize'
 import partial from 'lodash/partial'
 
-import { createAction } from './utils'
+import { createAction, getProgress } from './utils'
 
 // Close the field. Reset all values to default.
 export const CLEAR = 'field/CLEAR'
@@ -28,6 +29,16 @@ export const open = createAction(OPEN)
 // Saving to server.
 export const SAVE = 'field/SAVE'
 export const save = createAction(SAVE)
+
+// Record upload/save progress.
+export const SAVED_PROGRESS = 'field/SAVED_PROGRESS'
+export function savedProgress(prefix, valueOrEvent) {
+  const action = createAction(SAVED_PROGRESS)
+  const progress = getProgress(valueOrEvent)
+  return dispatch =>
+    progress % 5 === 0 ? dispatch(action(prefix, progress)) : false
+}
+
 // Has been saved on server.
 export const SAVED = 'field/SAVED'
 export const saved = createAction(SAVED)
@@ -36,7 +47,7 @@ export const valid = createAction(VALID)
 
 // Redux-field events:
 export const fieldEvent = {
-  clear, clearError, close, error, invalid, meta, open, save, saved, valid,
+  clear, clearError, close, error, invalid, meta, open, save, saved, savedProgress, valid,
 }
 
 // FORM & FOCUS EVENTS
