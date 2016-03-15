@@ -1,6 +1,6 @@
 import test from 'tape'
 
-import { getMeta, getPayload, getPrefix } from '../src/utils'
+import { getMeta, getPayload, getPrefix, getProgress } from '../src/utils'
 import { nativeEvent } from './mock'
 
 const prefix = [ 'foo', 'bar' ]
@@ -23,5 +23,11 @@ test('getPayload', t => {
   t.equal(getPayload('foo', 'bar'), 'bar')
   t.equal(getPayload('foo', ''), '')
   t.equal(getPayload([ 'default' ], nativeEvent), nativeEvent.target.value)
+  t.end()
+})
+test('getProgress', t => {
+  t.equal(getProgress('10.2'), 10, 'string')
+  t.equal(getProgress(10.2), 10, 'number')
+  t.equal(getProgress({ loaded: 256, total: 510 }), 50, 'event')
   t.end()
 })

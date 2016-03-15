@@ -31,3 +31,9 @@ export function getPayload(prefix, payload) {
 export function createAction(type, hasPayload = true) {
   return _createAction(type, hasPayload ? getPayload : noop, getMeta)
 }
+export function getProgress(value) {
+  if (isObject(value) && value.loaded && value.total) {
+    return parseInt((value.loaded / value.total) * 100, 10)
+  }
+  return parseInt(value, 10)
+}
