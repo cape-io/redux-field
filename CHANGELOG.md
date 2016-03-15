@@ -1,3 +1,8 @@
+## [2.2.0]
+> 2016-03-15
+
+* Added `savedProgress` action and field state property.
+
 ## [2.1.3]
 > 2016-03-13
 
