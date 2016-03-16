@@ -16,35 +16,32 @@ export function getErrorVal(state, { pristine, validate }) {
   if (state.invalid[state.value]) return state.invalid[state.value]
   return state.error
 }
+export function getStatus(errorVal, isValid) {
+  if (isValid) return 'success'
+  if (!errorVal) return null
+  return errorVal.status || 'error'
+}
 // Validate function should return a string or object
 // error: { message: String, suggestion: String, status: String }
 export function derivedState(state, { initialValue, validate }) {
   const initVal = state.initialValue || initialValue || defaultState.initialValue
   const pristine = state.value === initVal
   const errorVal = getErrorVal(state, { pristine, validate })
-  let status = errorVal ? 'error' : null
-  if (errorVal && errorVal.status) {
-    status = errorVal.status
-  }
-  // Has value value and there are no errors.
   const isValid = !errorVal && !pristine
-  if (isValid) {
-    status = 'success'
-  }
   return state.merge({
     editing: state.focus && !pristine,
     dirty: !pristine,
     errorMessage: errorVal && errorVal.message ? errorVal.message : errorVal,
     hasError: !!errorVal,
     initialValue: initVal,
-    invalid: state.invalid[state.value] || null,
+    invalidValue: state.invalid[state.value] || null,
     isValid,
     open: state.blur || state.focus,
     pristine,
     saved: !pristine && state.value === state.savedValue,
-    status,
+    status: getStatus(errorVal, isValid),
     suggestion: errorVal && errorVal.suggestion ? errorVal.suggestion : null,
-    valid: state.valid[state.value] || null,
+    validValue: state.valid[state.value] || null,
   })
 }
 export function getFieldState(state, props) {

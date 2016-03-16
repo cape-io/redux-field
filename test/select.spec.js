@@ -28,7 +28,8 @@ test('getState', t => {
     hasError: false,
     isValid: true,
     status: 'success',
-    valid: { message: 'welcome' },
+    valid: { 'kai@foo.x': { message: 'welcome' } },
+    validValue: { message: 'welcome' },
     value: 'kai@foo.x',
   })
   t.deepEqual(getState({ form: state2 }, {}), dirty2, 'valid is set')

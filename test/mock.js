@@ -10,7 +10,8 @@ export const emptyGetStateResult = immutable({
   hasError: false,
   id: null,
   initialValue: null,
-  invalid: null,
+  invalid: {},
+  invalidValue: null,
   isValid: false,
   meta: null,
   savedProgress: 0,
@@ -21,7 +22,8 @@ export const emptyGetStateResult = immutable({
   saved: false,
   status: null,
   suggestion: null,
-  valid: null,
+  valid: {},
+  validValue: null,
   value: null,
 })
 export const fieldEvent = [

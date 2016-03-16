@@ -1,3 +1,9 @@
+## [3.0.0]
+
+Should be an easy change for most.
+
+* Breaking change: `derivedState()` returns `invalidValue` and `validValue` instead of `invalid` and `valid`. This allows the entire state of invalid and valid to be used even when there is no value.
+
 ## [2.2.0]
 > 2016-03-15
 
