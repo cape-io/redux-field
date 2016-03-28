@@ -1,3 +1,8 @@
+## [3.1.0]
+> 2016-03-28
+
+Add `touched` state property.
+
 ## [3.0.0]
 
 Should be an easy change for most.

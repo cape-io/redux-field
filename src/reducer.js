@@ -20,6 +20,7 @@ export const defaultState = immutable({
   savedProgress: 0, // Percentage Number 0-99.
   savedValue: null,
   saving: false, // Bool.
+  touched: false,
   valid: {}, // index of valid values.
   value: null, // Anything.
 })
@@ -28,15 +29,17 @@ export const reducers = {
   [CLEAR]: () => defaultState,
   [CLEAR_ERROR]: (state) => state.set('error', defaultState.error),
   // Should close also change initialValue?
-  [CLOSE]: state => state.merge({ blur: defaultState.blur, focus: defaultState.focus }),
+  [CLOSE]: state =>
+    state.merge({ blur: defaultState.blur, focus: defaultState.focus, touched: true }),
   [ERROR]: (state, payload) => state.merge({ error: payload }),
   [INVALID]: (state, payload) => state.setIn([ 'invalid', payload.key ], payload.value),
   [META]: (state, payload) => state.set('meta', payload),
-  [OPEN]: (state, payload) => !payload ? state.set('focus', true) : state.merge({
+  [OPEN]: (state, payload = {}) => state.merge({
     focus: true,
     id: payload.id || defaultState.id,
-    initialValue: state.initialValue || payload.initialValue,
-    value: state.value || payload.initialValue,
+    initialValue: state.initialValue || payload.initialValue || null,
+    touched: true,
+    value: state.value || payload.initialValue || null,
   }),
   [SAVE]: (state) => state.set('saving', true),
   [SAVED_PROGRESS]: (state, payload) => state.set('savedProgress', payload),
@@ -50,9 +53,9 @@ export const reducers = {
   // This is another spot you could save meta data about a particular value.
   [VALID]: (state, payload) => state.setIn([ 'valid', payload.key ], payload.value),
   [BLUR]: (state, payload) =>
-    state.merge({ blur: true, focus: false, value: payload || state.value }),
-  [CHANGE]: (state, payload) => state.set('value', payload),
-  [FOCUS]: (state) => state.merge({ blur: false, focus: true }),
+    state.merge({ blur: true, focus: false, touched: true, value: payload || state.value }),
+  [CHANGE]: (state, payload) => state.merge({ touched: true, value: payload }),
+  [FOCUS]: (state) => state.merge({ blur: false, focus: true, touched: true }),
   [SUBMIT]: (state, payload) => state.merge({
     blur: defaultState.blur,
     error: defaultState.error,

@@ -22,6 +22,7 @@ export const emptyGetStateResult = immutable({
   saved: false,
   status: null,
   suggestion: null,
+  touched: false,
   valid: {},
   validValue: null,
   value: null,

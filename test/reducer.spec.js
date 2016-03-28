@@ -5,9 +5,11 @@ import { defaultState } from '../src/reducer'
 
 test('reducer', t => {
   let state = reducer(undefined, onChange(null, 'jo'))
-  t.deepEqual(state.default, defaultState.set('value', 'jo'), 'onChange')
+  t.deepEqual(state.default, defaultState.merge({ touched: true, value: 'jo' }), 'onChange')
   state = reducer(state, onSubmit(null, 'joy'))
-  t.deepEqual(state.default, defaultState.merge({ value: 'joy', saving: true }), 'onSubmit')
+  t.deepEqual(
+    state.default, defaultState.merge({ touched: true, value: 'joy', saving: true }), 'onSubmit'
+  )
   t.end()
 })
 test('open', t => {
@@ -17,17 +19,21 @@ test('open', t => {
   t.equal(get('focus'), true, 'focus')
   t.equal(get('initialValue'), null, 'initialValue')
   t.equal(get('value'), null, 'value')
+  t.equal(get('touched'), true, 'touched')
   state = reducer(undefined, open(null, { initialValue: 'foo' }))
   t.equal(get('focus'), true, 'focus')
   t.equal(get('initialValue'), 'foo', 'initialValue')
   t.equal(get('value'), 'foo', 'value')
+  t.equal(get('touched'), true, 'touched')
   state = reducer(state, close())
   t.equal(get('focus'), false, 'focus')
   t.equal(get('blur'), false, 'blur')
+  t.equal(get('touched'), true, 'touched')
   state = reducer(state, open(null, { initialValue: 'bar' }))
   t.equal(get('focus'), true, 'focus')
   t.equal(get('value'), 'foo', 'value')
   t.equal(get('initialValue'), 'foo', 'initialValue')
+  t.equal(get('touched'), true, 'touched')
   t.end()
 })
 test('savedProgress', t => {

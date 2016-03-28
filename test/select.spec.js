@@ -18,6 +18,7 @@ test('getState', t => {
     isValid: false,
     pristine: false,
     status: 'error',
+    touched: true,
     value: '',
   })
   t.deepEqual(getState({ form: state }, props), dirty, 'empty value')
