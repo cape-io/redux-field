@@ -8,7 +8,7 @@ export function selectForm(state) {
   return state.form
 }
 export function getErrorVal(state, { pristine, validate }) {
-  if (pristine) return null
+  if (pristine && !state.error) return null
   if (isFunction(validate)) {
     const errorVal = validate(state.value)
     if (errorVal) return errorVal

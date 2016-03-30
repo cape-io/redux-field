@@ -1,7 +1,13 @@
+## [3.1.1]
+> 2016-03-30
+
+* Pristine with error should return error.
+* Added tests for `getErrorVal()`.
+
 ## [3.1.0]
 > 2016-03-28
 
-Add `touched` state property.
+* Add `touched` state property.
 
 ## [3.0.0]
 

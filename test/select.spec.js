@@ -1,7 +1,8 @@
 import test from 'tape'
+import { identity, noop } from 'lodash'
 
 import { invalid, onChange, valid } from '../src/actions'
-import { getState } from '../src/select'
+import { getErrorVal, getState } from '../src/select'
 import reducer from '../src/reducer'
 
 import { emptyGetStateResult } from './mock'
@@ -41,5 +42,26 @@ test('getState', t => {
   t.equal(getState({ form: state2 }, {}).errorMessage, 'wrong domain')
   props.validate = invalidDomain
   t.equal(getState({ form: state2 }, props).errorMessage, 'invalid domain')
+  t.end()
+})
+test('getErrorVal', t => {
+  const errorVal = getErrorVal(
+    { error: 'error msg', invalid: {}, value: null },
+    { pristine: true }
+  )
+  t.equal(errorVal, 'error msg', 'errorVal')
+  const nullErr = getErrorVal({ error: null }, { pristine: true })
+  t.equal(nullErr, null, 'nullError')
+  const invalidErr = getErrorVal(
+    { error: null, invalid: { foo: 'error msg' }, value: 'foo' },
+    { pristine: false, validate: noop }
+  )
+  t.equal(invalidErr, 'error msg', 'invalidErr')
+  const validateErr = getErrorVal(
+    { error: null, invalid: { foo: 'error msg' }, value: 'foo' },
+    { pristine: false, validate: () => 'invalid' }
+  )
+  t.equal(validateErr, 'invalid', 'invalidErr')
+
   t.end()
 })
