@@ -18,8 +18,8 @@ export function getPrefix(prefix) {
   return [ 'default' ]
 }
 
-export function getMeta(prefix) {
-  return { prefix: getPrefix(prefix) }
+export function getMeta(prefix, payload, extraMeta = {}) {
+  return { ...extraMeta, prefix: getPrefix(prefix) }
 }
 export function getPayload(prefix, payload) {
   if (!payload) return payload

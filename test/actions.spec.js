@@ -26,6 +26,10 @@ test('actions', t => {
     action.onChange([ 'login', 'email' ], 'a'),
     { meta: { prefix: [ 'login', 'email' ] }, type: action.CHANGE, payload: 'a' }
   )
+  t.deepEqual(
+    action.meta(null, {}, { extra: true }),
+    { meta: { extra: true, prefix: [ 'default' ] }, type: action.META, payload: {} }
+  )
   t.end()
 })
 test('savedProgress', t => {

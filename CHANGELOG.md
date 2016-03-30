@@ -1,3 +1,8 @@
+## [3.1.2]
+> 2016-03-30
+
+* Allow extra meta to be included in actions.
+
 ## [3.1.1]
 > 2016-03-30
 
