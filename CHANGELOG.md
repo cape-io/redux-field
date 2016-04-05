@@ -1,3 +1,9 @@
+## [3.1.3]
+> 2016-04-05
+
+* `META` action now sets `touched` as true and does a merge on `meta` instead of replacing it.
+* `getMeta` requires third arg to be object before it will be merged.
+
 ## [3.1.2]
 > 2016-03-30
 

@@ -33,7 +33,7 @@ export const reducers = {
     state.merge({ blur: defaultState.blur, focus: defaultState.focus, touched: true }),
   [ERROR]: (state, payload) => state.merge({ error: payload }),
   [INVALID]: (state, payload) => state.setIn([ 'invalid', payload.key ], payload.value),
-  [META]: (state, payload) => state.set('meta', payload),
+  [META]: (state, payload) => state.merge({ meta: payload, touched: true }, { deep: true }),
   [OPEN]: (state, payload = {}) => state.merge({
     focus: true,
     id: payload.id || defaultState.id,

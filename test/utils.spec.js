@@ -14,7 +14,7 @@ test('getPrefix', t => {
   t.end()
 })
 test('getMeta', t => {
-  t.deepEqual(getMeta('form.field', 'bar'), { prefix: [ 'form', 'field' ] })
+  t.deepEqual(getMeta('form.field', 'bar', 'candy'), { prefix: [ 'form', 'field' ] })
   t.equal(getMeta(prefix, { foo: 'car' }).prefix, prefix)
   t.deepEqual(getMeta(prefix, null, { sendSocket: false }), { prefix, sendSocket: false })
   t.end()
