@@ -44,12 +44,15 @@ export function derivedState(state, { initialValue, validate }) {
     validValue: state.valid[state.value] || null,
   })
 }
+
+// Please note that it will return defaultState if there is an invalid prefix.
+export function selectFieldState(state, prefix, selectFormState = selectForm) {
+  return get(selectFormState(state), getPrefix(prefix), defaultState)
+}
+// Select prefix and selectForm from props.
 export function getFieldState(state, props) {
-  const selectFormState = props.selectForm || selectForm
-  const prefix = getPrefix(props.prefix)
-  return get(selectFormState(state), prefix, defaultState)
+  return selectFieldState(state, props.prefix, props.selectForm)
 }
 export function getState(state, props) {
-  const fieldState = getFieldState(state, props)
-  return derivedState(fieldState, props)
+  return derivedState(getFieldState(state, props), props)
 }

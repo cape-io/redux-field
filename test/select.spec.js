@@ -2,8 +2,8 @@ import test from 'tape'
 import { identity, noop } from 'lodash'
 
 import { invalid, onChange, valid } from '../src/actions'
-import { getErrorVal, getState } from '../src/select'
-import reducer from '../src/reducer'
+import { getErrorVal, getState, selectFieldState } from '../src/select'
+import reducer, { defaultState } from '../src/reducer'
 
 import { emptyGetStateResult } from './mock'
 import { invalidDomain, isRequired } from './validate'
@@ -63,5 +63,18 @@ test('getErrorVal', t => {
   )
   t.equal(validateErr, 'invalid', 'invalidErr')
 
+  t.end()
+})
+test('selectFieldState', t => {
+  t.deepEqual(
+    selectFieldState({ form: {} }, 'default'),
+    defaultState,
+    'defaultState'
+  )
+  t.equal(
+    selectFieldState({ form: { default: { value: 'foo' } } }, 'default').value,
+    'foo',
+    'basic select value'
+  )
   t.end()
 })

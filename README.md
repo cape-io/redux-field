@@ -49,3 +49,8 @@ Wrapping a component with connectField will add a `form` property. It includes t
 * `handleFocus`
 * `handleInput`
 * `handleSubmit`
+
+## Selectors
+* `selectForm(state)`: state.form
+* `selectFieldState(state, prefix, selectFormState = selectForm)`: Please note that it will return defaultState if there is an invalid prefix.
+* `getFieldState(state, props)`:

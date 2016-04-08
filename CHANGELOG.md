@@ -1,3 +1,8 @@
+## [3.2.0]
+> 2016-04-08
+
+* Added `selectFieldState(state, prefix, selectFormState = selectForm)` selector that is used by `getFieldState(state, props)`.
+
 ## [3.1.3]
 > 2016-04-05
 
