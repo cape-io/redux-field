@@ -1,3 +1,9 @@
+## [3.3.0]
+> 2016-08-11
+
+* Add `getFieldValue(state, prefix, selectFormState, prop = 'value')` selector.
+* Package updates
+
 ## [3.2.0]
 > 2016-04-08
 

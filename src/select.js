@@ -56,3 +56,6 @@ export function getFieldState(state, props) {
 export function getState(state, props) {
   return derivedState(getFieldState(state, props), props)
 }
+export function getFieldValue(state, prefix, selectFormState, prop = 'value') {
+  return selectFieldState(state, prefix, selectFormState)[prop]
+}
