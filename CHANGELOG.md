@@ -1,3 +1,9 @@
+## [3.4.0]
+> 2016-10-03
+
+* Add `getFieldEvents(prefix)`, `getFormEvents(prefix)`, `getFormHandlers(prefix)` so you can get at the preferred set of actions. Built utils/mapPartial and changed `_getActions` as a result.
+* `getState()` is not a reselect selector.
+
 ## [3.3.0]
 > 2016-08-11
 

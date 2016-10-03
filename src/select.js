@@ -1,5 +1,7 @@
 import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
+import nthArg from 'lodash/nthArg'
+import { createSelector } from 'reselect'
 
 import { defaultState } from './reducer'
 import { getPrefix } from './utils'
@@ -53,9 +55,7 @@ export function selectFieldState(state, prefix, selectFormState = selectForm) {
 export function getFieldState(state, props) {
   return selectFieldState(state, props.prefix, props.selectForm)
 }
-export function getState(state, props) {
-  return derivedState(getFieldState(state, props), props)
-}
+export const getState = createSelector(getFieldState, nthArg(1), derivedState)
 export function getFieldValue(state, prefix, selectFormState, prop = 'value') {
   return selectFieldState(state, prefix, selectFormState)[prop]
 }

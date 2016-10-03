@@ -39,6 +39,15 @@ test('savedProgress', t => {
   t.equal(action.savedProgress(null, 11)(t.fail), false, 'not multiple of 5.')
   t.end()
 })
+test('getFieldEvents', (t) => {
+  const act = action.getFormEvents('foo.bar')
+  t.deepEqual(functions(act), formEvent, 'formEvent')
+  t.deepEqual(
+    act.onChange('c'),
+    { meta: { prefix: [ 'foo', 'bar' ] }, type: action.CHANGE, payload: 'c' }
+  )
+  t.end()
+})
 test('action bundles', t => {
   t.deepEqual(functions(action.formEvent), formEvent, 'formEvent')
   t.deepEqual(functions(action.formHandler), formHandler, 'formHandler')
@@ -48,5 +57,16 @@ test('action bundles', t => {
   t.deepEqual(functions(acts.formEvent), formEvent)
   t.deepEqual(functions(acts.formHandler), formHandler)
   t.deepEqual(functions(acts.fieldEvent), fieldEvent)
+  t.deepEqual(
+    acts.formEvent.onChange('b'),
+    { meta: { prefix: [ 'default' ] }, type: action.CHANGE, payload: 'b' }
+  )
+  t.end()
+})
+test('savedProgress', t => {
+  function dispatch(expected) { return progress => t.deepEqual(progress, expected, 'dispatched') }
+  const act = { meta: { prefix: [ 'default' ] }, type: 'field/SAVED_PROGRESS', payload: 10 }
+  action.savedProgress(null, 10)(dispatch(act))
+  t.equal(action.savedProgress(null, 11)(t.fail), false, 'not multiple of 5.')
   t.end()
 })

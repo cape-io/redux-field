@@ -4,7 +4,7 @@ import mapValues from 'lodash/mapValues'
 import memoize from 'lodash/memoize'
 import partial from 'lodash/partial'
 
-import { createAction, getProgress } from './utils'
+import { createAction, getProgress, mapPartial } from './utils'
 
 // Close the field. Reset all values to default.
 export const CLEAR = 'field/CLEAR'
@@ -36,7 +36,7 @@ export function savedProgress(prefix, valueOrEvent) {
   const action = createAction(SAVED_PROGRESS)
   const progress = getProgress(valueOrEvent)
   return dispatch =>
-    progress % 5 === 0 ? dispatch(action(prefix, progress)) : false
+    progress % 5 === 0 && dispatch(action(prefix, progress)) || false
 }
 
 // Has been saved on server.
@@ -49,6 +49,7 @@ export const valid = createAction(VALID)
 export const fieldEvent = {
   clear, clearError, close, error, invalid, meta, open, save, saved, savedProgress, valid,
 }
+export const getFieldEvents = mapPartial(fieldEvent)
 
 // FORM & FOCUS EVENTS
 export const BLUR = 'field/BLUR'
@@ -69,11 +70,15 @@ export const onSubmit = createAction(SUBMIT)
 export const formEvent = {
   onBlur, onChange, onFocus, onInput, onSubmit,
 }
+export const getFormEvents = mapPartial(formEvent)
 export const formHandler = mapKeys(formEvent, (val, key) => key.replace('on', 'handle'))
+export const getFormHandlers = mapPartial(formHandler)
 
 function _getActions(prefix) {
-  const wrap = (acts) => mapValues(acts, func => partial(func, prefix))
-  const actions = { fieldEvent, formEvent, formHandler }
-  return mapValues(actions, wrap)
+  return {
+    fieldEvent: getFieldEvents(prefix),
+    formEvent: getFormEvents(prefix),
+    formHandler: getFormHandlers(prefix),
+  }
 }
-export const getActions = memoize(_getActions, (prefix) => prefix.toString())
+export const getActions = memoize(_getActions, prefix => prefix.toString())
