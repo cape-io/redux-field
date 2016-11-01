@@ -1,6 +1,8 @@
+import flow from 'lodash/flow'
 import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 import nthArg from 'lodash/nthArg'
+import property from 'lodash/property'
 import { createSelector } from 'reselect'
 
 import { defaultState } from './reducer'
@@ -25,7 +27,7 @@ export function getStatus(errorVal, isValid) {
 }
 // Validate function should return a string or object
 // error: { message: String, suggestion: String, status: String }
-export function derivedState(state, { initialValue, validate }) {
+export function derivedState(state, initialValue, validate) {
   const initVal = state.initialValue || initialValue || defaultState.initialValue
   const pristine = state.value === initVal
   const errorVal = getErrorVal(state, { pristine, validate })
@@ -55,7 +57,16 @@ export function selectFieldState(state, prefix, selectFormState = selectForm) {
 export function getFieldState(state, props) {
   return selectFieldState(state, props.prefix, props.selectForm)
 }
-export const getState = createSelector(getFieldState, nthArg(1), derivedState)
+// Yes, this is ugly but allows for easy field comparisons.
+export function getProp(prop) { return flow(nthArg(1), property(prop)) }
+export const getState = createSelector(
+  getFieldState, getProp('initialValue'), getProp('validate'), derivedState
+)
 export function getFieldValue(state, prefix, selectFormState, prop = 'value') {
   return selectFieldState(state, prefix, selectFormState)[prop]
+}
+
+// Returns selector.
+export function fieldValue(prefix, prop = 'value') {
+  return state => get(selectFieldState(state, prefix), prop)
 }
