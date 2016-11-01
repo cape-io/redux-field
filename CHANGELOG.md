@@ -1,3 +1,9 @@
+## [3.4.1]
+> 2016-10-03
+
+* Expose `mapPartial()` to public API.
+* `fieldValue(prefix)(state)` selector.
+
 ## [3.4.0]
 > 2016-10-03
 

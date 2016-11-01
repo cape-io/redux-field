@@ -1,4 +1,4 @@
-# redux-field v3.4.0
+# redux-field 3.4.1
 
 [![Build Status](https://travis-ci.org/cape-io/redux-field.svg?branch=master)](https://travis-ci.org/cape-io/redux-field)
 
