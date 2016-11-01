@@ -1,8 +1,5 @@
 import mapKeys from 'lodash/mapKeys'
-// import isObject from 'lodash/isObject'
-import mapValues from 'lodash/mapValues'
 import memoize from 'lodash/memoize'
-import partial from 'lodash/partial'
 
 import { createAction, getProgress, mapPartial } from './utils'
 
