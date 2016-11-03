@@ -1,12 +1,12 @@
 import curry from 'lodash/curry'
 import noop from 'lodash/noop'
-import _createAction, { payloadCreatorDefault } from './createAction'
 import isArray from 'lodash/isArray'
 import isEmpty from 'lodash/isEmpty'
 import isObject from 'lodash/isObject'
 import isString from 'lodash/isString'
 import mapValues from 'lodash/mapValues'
 import partial from 'lodash/partial'
+import _createAction, { payloadCreatorDefault } from './createAction'
 
 export function getPrefix(prefix) {
   if (prefix && isString(prefix)) {

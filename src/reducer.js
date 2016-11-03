@@ -27,7 +27,7 @@ export const defaultState = immutable({
 
 export const reducers = {
   [CLEAR]: () => defaultState,
-  [CLEAR_ERROR]: (state) => state.set('error', defaultState.error),
+  [CLEAR_ERROR]: state => state.set('error', defaultState.error),
   // Should close also change initialValue?
   [CLOSE]: state =>
     state.merge({ blur: defaultState.blur, focus: defaultState.focus, touched: true }),
@@ -41,11 +41,11 @@ export const reducers = {
     touched: true,
     value: state.value || payload.initialValue || null,
   }),
-  [SAVE]: (state) => state.set('saving', true),
+  [SAVE]: state => state.set('saving', true),
   [SAVED_PROGRESS]: (state, payload) => state.set('savedProgress', payload),
   [SAVED]: (state, payload) => state.merge({
     error: defaultState.error,
-    id: payload && payload.id || state.id,
+    id: payload && (payload.id || state.id),
     saving: defaultState.saving,
     savedProgress: defaultState.savedProgress,
     savedValue: payload,
@@ -55,7 +55,7 @@ export const reducers = {
   [BLUR]: (state, payload) =>
     state.merge({ blur: true, focus: false, touched: true, value: payload || state.value }),
   [CHANGE]: (state, payload) => state.merge({ touched: true, value: payload }),
-  [FOCUS]: (state) => state.merge({ blur: false, focus: true, touched: true }),
+  [FOCUS]: state => state.merge({ blur: false, focus: true, touched: true }),
   [SUBMIT]: (state, payload) => state.merge({
     blur: defaultState.blur,
     error: defaultState.error,

@@ -6,7 +6,7 @@ import pickBy from 'lodash/pickBy'
 
 export function payloadCreatorDefault(payload) {
   if (isError(payload) || isObject(payload)) {
-    return pickBy(payload, (val) => !isUndefined(val) && !isFunction(val))
+    return pickBy(payload, val => !isUndefined(val) && !isFunction(val))
   }
   return payload
 }

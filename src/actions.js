@@ -33,7 +33,7 @@ export function savedProgress(prefix, valueOrEvent) {
   const action = createAction(SAVED_PROGRESS)
   const progress = getProgress(valueOrEvent)
   return dispatch =>
-    progress % 5 === 0 && dispatch(action(prefix, progress)) || false
+    (progress % 5 === 0 && dispatch(action(prefix, progress))) || false
 }
 
 // Has been saved on server.
@@ -61,6 +61,7 @@ export const onFocus = createAction(FOCUS)
 export const onInput = onChange
 // Submit, close, save.
 export const SUBMIT = 'field/SUBMIT'
+// @TODO Create timer to trigger error if doesn't submit.
 export const onSubmit = createAction(SUBMIT)
 
 // Form and focus events:
@@ -71,11 +72,11 @@ export const getFormEvents = mapPartial(formEvent)
 export const formHandler = mapKeys(formEvent, (val, key) => key.replace('on', 'handle'))
 export const getFormHandlers = mapPartial(formHandler)
 
-function _getActions(prefix) {
-  return {
+export const getActions = memoize(
+  prefix => ({
     fieldEvent: getFieldEvents(prefix),
     formEvent: getFormEvents(prefix),
     formHandler: getFormHandlers(prefix),
-  }
-}
-export const getActions = memoize(_getActions, prefix => prefix.toString())
+  }),
+  prefix => prefix.toString()
+)
