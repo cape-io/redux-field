@@ -3,7 +3,7 @@ import test from 'tape'
 import { close, fieldReducer as reducer, onChange, onSubmit, open, savedProgress } from '../src'
 import { defaultState } from '../src/reducer'
 
-test('reducer', t => {
+test('reducer', (t) => {
   let state = reducer(undefined, onChange(null, 'jo'))
   t.deepEqual(state.default, defaultState.merge({ touched: true, value: 'jo' }), 'onChange')
   state = reducer(state, onSubmit(null, 'joy'))
@@ -12,7 +12,7 @@ test('reducer', t => {
   )
   t.end()
 })
-test('open', t => {
+test('open', (t) => {
   const action = open()
   let state = reducer(undefined, action)
   function get(id) { return state.default[id] }
@@ -36,7 +36,7 @@ test('open', t => {
   t.equal(get('touched'), true, 'touched')
   t.end()
 })
-test('savedProgress', t => {
+test('savedProgress', (t) => {
   t.equal(defaultState.savedProgress, 0, 'defaultState')
   function dispatch(action) {
     const state = reducer(undefined, action)
