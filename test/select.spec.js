@@ -14,10 +14,10 @@ test('getState', (t) => {
   const state = reducer({}, onChange(null, ''))
   const dirty = emptyGetStateResult.merge({
     errorMessage: 'Required',
-    dirty: true,
     hasError: true,
+    isDirty: true,
+    isPristine: false,
     isValid: false,
-    pristine: false,
     status: 'error',
     touched: true,
     value: '',
