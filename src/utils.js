@@ -1,12 +1,5 @@
-import curry from 'lodash/curry'
-import noop from 'lodash/noop'
-import isArray from 'lodash/isArray'
-import isEmpty from 'lodash/isEmpty'
-import isObject from 'lodash/isObject'
-import isString from 'lodash/isString'
-import mapValues from 'lodash/mapValues'
-import partial from 'lodash/partial'
-import _createAction, { payloadCreatorDefault } from './createAction'
+import { curry, noop, isArray, isEmpty, isObject, isString, mapValues, partial } from 'lodash'
+import { createAction as actionCreate, getPayload } from 'cape-redux'
 
 export function getPrefix(prefix) {
   if (prefix && isString(prefix)) {
@@ -21,19 +14,23 @@ export function getPrefix(prefix) {
   return [ 'default' ]
 }
 
-export function getMeta(_prefix, payload, extraMeta) {
-  const prefix = getPrefix(_prefix)
+export function getMeta(prefixRaw, payload, extraMeta) {
+  const prefix = getPrefix(prefixRaw)
   return isObject(extraMeta) ? { ...extraMeta, prefix } : { prefix }
 }
-export function getPayload(prefix, payload) {
+export function preventDefault(event) {
+  if (event && event.preventDefault) event.preventDefault()
+}
+export function createPayload(prefix, payload) {
   if (!payload) return payload
+  preventDefault(payload)
   if (payload.target && payload.nativeEvent) {
     return payload.target.value || ''
   }
-  return payloadCreatorDefault(payload)
+  return getPayload(payload)
 }
 export function createAction(type, hasPayload = true) {
-  return _createAction(type, hasPayload ? getPayload : noop, getMeta)
+  return actionCreate(type, hasPayload ? createPayload : noop, getMeta)
 }
 export function getProgress(value) {
   if (isObject(value) && value.loaded && value.total) {
