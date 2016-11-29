@@ -19,7 +19,7 @@ export const defaultState = immutable({
   meta: null, // Anything.
   savedProgress: 0, // Percentage Number 0-99.
   savedValue: null,
-  saving: false, // Bool.
+  isSaving: false, // Bool.
   touched: false,
   valid: {}, // index of valid values.
   value: null, // Anything.
@@ -41,14 +41,14 @@ export const reducers = {
     touched: true,
     value: state.value || payload.initialValue || null,
   }),
-  [SAVE]: state => state.set('saving', true),
+  [SAVE]: state => state.set('isSaving', true),
   [SAVED_PROGRESS]: (state, payload) => state.set('savedProgress', payload),
   [SAVED]: (state, payload) => state.merge({
     error: defaultState.error,
-    id: payload && (payload.id || state.id),
-    saving: defaultState.saving,
+    id: get(payload, 'id', state.id),
+    isSaving: defaultState.isSaving,
     savedProgress: defaultState.savedProgress,
-    savedValue: payload,
+    savedValue: get(payload, 'value', state.value),
   }),
   // This is another spot you could save meta data about a particular value.
   [VALID]: (state, payload) => state.setIn([ 'valid', payload.key ], payload.value),
@@ -60,7 +60,7 @@ export const reducers = {
     blur: defaultState.blur,
     error: defaultState.error,
     focus: defaultState.focus,
-    saving: true,
+    isSaving: true,
     value: payload || state.value,
   }),
 }

@@ -1,16 +1,15 @@
-import flow from 'lodash/flow'
-import get from 'lodash/get'
-import isFunction from 'lodash/isFunction'
-import nthArg from 'lodash/nthArg'
-import property from 'lodash/property'
+import { flow, get, isFunction, nthArg, partial, property } from 'lodash'
 import { createSelector } from 'reselect'
-
+import { select } from 'cape-select'
 import { defaultState } from './reducer'
 import { getPrefix } from './utils'
 
 export function selectForm(state) {
   return state.form
 }
+// fieldSelector(prefixArray)(state)
+export const getFieldSelector = partial(select, selectForm)
+
 export function getErrorVal(state, { pristine, validate }) {
   if (pristine && !state.error) return null
   if (isFunction(validate)) {
@@ -33,16 +32,16 @@ export function derivedState(state, initialValue, validate) {
   const errorVal = getErrorVal(state, { pristine, validate })
   const isValid = !errorVal && !pristine
   return state.merge({
-    editing: state.focus && !pristine,
-    dirty: !pristine,
+    isEditing: state.focus && !pristine,
+    isDirty: !pristine,
     errorMessage: errorVal && errorVal.message ? errorVal.message : errorVal,
     hasError: !!errorVal,
     initialValue: initVal,
     invalidValue: state.invalid[state.value] || null,
     isValid,
-    open: state.blur || state.focus,
-    pristine,
-    saved: !pristine && state.value === state.savedValue,
+    isOpen: state.blur || state.focus,
+    isPristine: pristine,
+    isSaved: !pristine && state.value === state.savedValue,
     status: getStatus(errorVal, isValid),
     suggestion: errorVal && errorVal.suggestion ? errorVal.suggestion : null,
     validValue: state.valid[state.value] || null,
@@ -63,7 +62,7 @@ export const getState = createSelector(
   getFieldState, getProp('initialValue'), getProp('validate'), derivedState
 )
 export function getFieldValue(state, prefix, selectFormState, prop = 'value') {
-  return selectFieldState(state, prefix, selectFormState)[prop]
+  return get(selectFieldState(state, prefix, selectFormState), prop)
 }
 
 // Returns selector.
