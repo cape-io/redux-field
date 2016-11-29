@@ -18,7 +18,7 @@ export const defaultState = immutable({
   savedProgress: 0, // Percentage Number 0-99.
   savedValue: null,
   isSaving: false, // Bool.
-  touched: false,
+  isTouched: false,
   valid: {}, // index of valid values.
   value: null, // Anything.
 })
@@ -28,15 +28,15 @@ export const reducers = {
   [CLEAR_ERROR]: state => state.set('error', defaultState.error),
   // Should close also change initialValue?
   [CLOSE]: state =>
-    state.merge({ blur: defaultState.blur, focus: defaultState.focus, touched: true }),
+    state.merge({ blur: defaultState.blur, focus: defaultState.focus, isTouched: true }),
   [ERROR]: (state, payload) => state.merge({ error: payload }),
   [INVALID]: (state, payload) => state.setIn([ 'invalid', payload.key ], payload.value),
-  [META]: (state, payload) => state.merge({ meta: payload, touched: true }, { deep: true }),
+  [META]: (state, payload) => state.merge({ meta: payload, isTouched: true }, { deep: true }),
   [OPEN]: (state, payload = {}) => state.merge({
     focus: true,
     id: payload.id || defaultState.id,
     initialValue: state.initialValue || payload.initialValue || null,
-    touched: true,
+    isTouched: true,
     value: state.value || payload.initialValue || null,
   }),
   [SAVE]: state => state.set('isSaving', true),
@@ -51,9 +51,9 @@ export const reducers = {
   // This is another spot you could save meta data about a particular value.
   [VALID]: (state, payload) => state.setIn([ 'valid', payload.key ], payload.value),
   [BLUR]: (state, payload) =>
-    state.merge({ blur: true, focus: false, touched: true, value: payload || state.value }),
-  [CHANGE]: (state, payload) => state.merge({ touched: true, value: payload }),
-  [FOCUS]: state => state.merge({ blur: false, focus: true, touched: true }),
+    state.merge({ blur: true, focus: false, isTouched: true, value: payload || state.value }),
+  [CHANGE]: (state, payload) => state.merge({ isTouched: true, value: payload }),
+  [FOCUS]: state => state.merge({ blur: false, focus: true, isTouched: true }),
   [SUBMIT]: (state, payload) => state.merge({
     blur: defaultState.blur,
     error: defaultState.error,
