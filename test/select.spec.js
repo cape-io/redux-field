@@ -1,5 +1,5 @@
 import test from 'tape'
-import { identity, noop } from 'lodash'
+import { noop } from 'lodash'
 
 import { invalid, onChange, valid } from '../src/actions'
 import { getErrorVal, getState, selectFieldState } from '../src/select'
@@ -8,7 +8,7 @@ import reducer, { defaultState } from '../src/reducer'
 import { emptyGetStateResult } from './mock'
 import { invalidDomain, isRequired } from './validate'
 
-test('getState', t => {
+test('getState', (t) => {
   const props = { validate: isRequired }
   t.deepEqual(getState({}, props), emptyGetStateResult, 'empty')
   const state = reducer({}, onChange(null, ''))
@@ -44,7 +44,7 @@ test('getState', t => {
   t.equal(getState({ form: state2 }, props).errorMessage, 'invalid domain')
   t.end()
 })
-test('getErrorVal', t => {
+test('getErrorVal', (t) => {
   const errorVal = getErrorVal(
     { error: 'error msg', invalid: {}, value: null },
     { pristine: true }
@@ -65,7 +65,7 @@ test('getErrorVal', t => {
 
   t.end()
 })
-test('selectFieldState', t => {
+test('selectFieldState', (t) => {
   t.deepEqual(
     selectFieldState({ form: {} }, 'default'),
     defaultState,

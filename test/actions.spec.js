@@ -1,12 +1,11 @@
 import test from 'tape'
-import functions from 'lodash/functions'
-import keys from 'lodash/keys'
+import { functions, keys } from 'lodash'
 
 import * as action from '../src/actions'
 
 import { formEvent, formHandler, fieldEvent } from './mock'
 
-test('actions', t => {
+test('actions', (t) => {
   t.deepEqual(
     action.clear(),
     { meta: { prefix: [ 'default' ] }, type: action.CLEAR },
@@ -32,7 +31,7 @@ test('actions', t => {
   )
   t.end()
 })
-test('savedProgress', t => {
+test('savedProgress', (t) => {
   function dispatch(expected) { return progress => t.deepEqual(progress, expected, 'dispatched') }
   const act = { meta: { prefix: [ 'default' ] }, type: 'field/SAVED_PROGRESS', payload: 10 }
   action.savedProgress(null, 10)(dispatch(act))
@@ -48,7 +47,7 @@ test('getFieldEvents', (t) => {
   )
   t.end()
 })
-test('action bundles', t => {
+test('action bundles', (t) => {
   t.deepEqual(functions(action.formEvent), formEvent, 'formEvent')
   t.deepEqual(functions(action.formHandler), formHandler, 'formHandler')
   t.deepEqual(functions(action.fieldEvent), fieldEvent, 'fieldEvent')
@@ -63,7 +62,7 @@ test('action bundles', t => {
   )
   t.end()
 })
-test('savedProgress', t => {
+test('savedProgress', (t) => {
   function dispatch(expected) { return progress => t.deepEqual(progress, expected, 'dispatched') }
   const act = { meta: { prefix: [ 'default' ] }, type: 'field/SAVED_PROGRESS', payload: 10 }
   action.savedProgress(null, 10)(dispatch(act))
