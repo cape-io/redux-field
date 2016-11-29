@@ -4,11 +4,14 @@ import { close, fieldReducer as reducer, onChange, onSubmit, open, savedProgress
 import { defaultState } from '../src/reducer'
 
 test('reducer', (t) => {
-  let state = reducer(undefined, onChange(null, 'jo'))
+  let state = reducer()
+  t.ok(state.asMutable)
+  t.deepEqual(state, {})
+  state = reducer(state, onChange(null, 'jo'))
   t.deepEqual(state.default, defaultState.merge({ touched: true, value: 'jo' }), 'onChange')
   state = reducer(state, onSubmit(null, 'joy'))
   t.deepEqual(
-    state.default, defaultState.merge({ touched: true, value: 'joy', saving: true }), 'onSubmit'
+    state.default, defaultState.merge({ touched: true, value: 'joy', isSaving: true }), 'onSubmit'
   )
   t.end()
 })

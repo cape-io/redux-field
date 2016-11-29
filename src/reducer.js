@@ -1,8 +1,6 @@
 import immutable from 'seamless-immutable'
-import get from 'lodash/get'
-import isArray from 'lodash/isArray'
-import isFunction from 'lodash/isFunction'
-
+import { get, isArray } from 'lodash'
+import { createReducer } from 'cape-redux'
 import {
   CLEAR, CLEAR_ERROR, CLOSE, ERROR, INVALID, META, OPEN, SAVE, SAVED_PROGRESS, SAVED, VALID,
   BLUR, CHANGE, FOCUS, SUBMIT,
@@ -64,12 +62,17 @@ export const reducers = {
     value: payload || state.value,
   }),
 }
-export default function reducer(_state = {}, action) {
-  if (!action.meta || !action.type || !isFunction(reducers[action.type])) return _state
+const options = { makeImmutable: true, skipErrors: false }
+export const fieldReducer = createReducer(reducers, defaultState, options)
+export function asImmutable(state) {
+  return state.asMutable ? state : immutable(state)
+}
+export default function reducer(state = immutable({}), action) {
+  if (!get(action, 'meta')) return state
   if (!isArray(action.meta.prefix)) throw new Error('Action must contain meta.prefix array.')
-  // Used after rehydration.
-  const state = _state.asMutable ? _state : immutable(_state)
   // Get the state slice we need for this action.
-  const fieldState = get(state, action.meta.prefix, defaultState)
-  return state.setIn(action.meta.prefix, reducers[action.type](fieldState, action.payload))
+  const oldFieldState = get(state, action.meta.prefix)
+  const newFieldState = fieldReducer(oldFieldState, action)
+  if (oldFieldState === newFieldState) return state
+  return asImmutable(state).setIn(action.meta.prefix, newFieldState)
 }
