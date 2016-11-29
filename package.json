@@ -30,6 +30,7 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
+    "cape-redux": "^2.3.0",
     "cape-select": "^2.3.1",
     "lodash": "^ 4.17.2",
     "react-redux": "^4.4.5",
