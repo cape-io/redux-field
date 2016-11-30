@@ -1,6 +1,6 @@
 import immutable from 'seamless-immutable'
 import { get, isArray } from 'lodash'
-import { createReducer } from 'cape-redux'
+import { createReducer, noReducerOfType } from 'cape-redux'
 import {
   CLEAR, CLEAR_ERROR, CLOSE, ERROR, INVALID, META, OPEN, SAVE, SAVED_PROGRESS, SAVED, VALID,
   BLUR, CHANGE, FOCUS, SUBMIT,
@@ -68,7 +68,7 @@ export function asImmutable(state) {
   return state.asMutable ? state : immutable(state)
 }
 export default function reducer(state = immutable({}), action) {
-  if (!get(action, 'meta')) return state
+  if (noReducerOfType(reducers)(action)) return state
   if (!isArray(action.meta.prefix)) throw new Error('Action must contain meta.prefix array.')
   // Get the state slice we need for this action.
   const oldFieldState = get(state, action.meta.prefix)

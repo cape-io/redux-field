@@ -1,5 +1,5 @@
+export * from './utils'
 export * from './actions'
 export connectField from './connectField'
 export fieldReducer from './reducer'
 export * from './select'
-export { getMeta, getPrefix, mapPartial } from './utils'

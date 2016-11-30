@@ -31,6 +31,7 @@ export function derivedState(state, initialValue, validate) {
   const pristine = state.value === initVal
   const errorVal = getErrorVal(state, { pristine, validate })
   const isValid = !errorVal && !pristine
+  const isOpen = state.blur || state.focus
   return state.merge({
     isEditing: state.focus && !pristine,
     isDirty: !pristine,
@@ -38,8 +39,9 @@ export function derivedState(state, initialValue, validate) {
     hasError: !!errorVal,
     initialValue: initVal,
     invalidValue: state.invalid[state.value] || null,
+    isClosed: !isOpen,
     isValid,
-    isOpen: state.blur || state.focus,
+    isOpen,
     isPristine: pristine,
     isSaved: !pristine && state.value === state.savedValue,
     status: getStatus(errorVal, isValid),
