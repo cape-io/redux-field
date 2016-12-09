@@ -15,7 +15,6 @@
   },
   "parser": "babel-eslint",
   "rules": {
-    "array-bracket-spacing": [ 2, "always" ],
     "brace-style": [2, "stroustrup", { "allowSingleLine": true }],
     "comma-dangle": [2, "always-multiline"],
     "id-length": [2, {

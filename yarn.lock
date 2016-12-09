@@ -973,6 +973,12 @@ camelcase@^1.0.2:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-1.2.1.tgz#9bb5304d2e0b56698b2c758b08a3eaa9daa58a39"
 
+cape-lodash@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/cape-lodash/-/cape-lodash-1.10.0.tgz#8168b3b3949112c9eb622708a2823f8cddef53de"
+  dependencies:
+    lodash "^4.17.2"
+
 cape-lodash@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/cape-lodash/-/cape-lodash-1.7.0.tgz#e4988077ed4cf8d3f21f62a0a1ff09828e6bd01f"

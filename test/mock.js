@@ -2,6 +2,7 @@ import immutable from 'seamless-immutable'
 
 export const emptyGetStateResult = immutable({
   blur: false,
+  dragCount: 0,
   error: null,
   errorMessage: null,
   focus: false,
@@ -10,6 +11,7 @@ export const emptyGetStateResult = immutable({
   initialValue: null,
   invalid: {},
   invalidValue: null,
+  isClosed: true,
   isDirty: false,
   isEditing: false,
   isOpen: false,

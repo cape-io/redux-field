@@ -1,8 +1,67 @@
 import test from 'tape'
-
+import { flow } from 'lodash'
 import { close, fieldReducer as reducer, onChange, onSubmit, open, savedProgress } from '../src'
-import { defaultState } from '../src/reducer'
+import {
+  blurReducer, defaultState, dragEnterReducer, dragLeaveReducer, focusReducer, getDragCount,
+} from '../src/reducer'
 
+test('getDragCount', (t) => {
+  t.equal(getDragCount(defaultState), 0)
+  t.end()
+})
+test('blurReducer', (t) => {
+  const state = defaultState.merge({ blur: false, focus: true, isTouched: false, value: 'foo' })
+  const res = blurReducer(state, 'bar')
+  t.equal(res.blur, true)
+  t.equal(res.focus, false)
+  t.equal(res.isTouched, true)
+  t.equal(res.value, 'bar')
+  const res2 = blurReducer(state)
+  t.equal(res2.value, 'foo')
+  t.end()
+})
+test('focusReducer', (t) => {
+  const state = defaultState.merge({ blur: true, focus: false, isTouched: false })
+  const res = focusReducer(state)
+  t.equal(res.blur, false)
+  t.equal(res.focus, true)
+  t.equal(res.isTouched, true)
+  const res2 = blurReducer(res)
+  t.equal(res2.blur, true)
+  t.equal(res2.focus, false)
+  t.end()
+})
+test('dragEnterReducer', (t) => {
+  const res = dragEnterReducer(defaultState)
+  t.equal(res.blur, false)
+  t.equal(res.focus, true)
+  t.equal(res.isTouched, true)
+  t.equal(res.dragCount, 1)
+  const res2 = dragEnterReducer(res)
+  t.equal(res2.focus, true)
+  t.equal(res2.dragCount, 2)
+  t.end()
+})
+test('dragLeaveReducer', (t) => {
+  const res = dragLeaveReducer(defaultState)
+  t.equal(res.dragCount, -1)
+  t.equal(res.blur, true)
+  t.equal(res.focus, false)
+  t.equal(res.isTouched, true)
+  t.equal(res.value, null)
+  const res2 = flow(dragEnterReducer, dragEnterReducer, dragLeaveReducer)(defaultState)
+  t.equal(res2.blur, false)
+  t.equal(res2.focus, true)
+  t.equal(res2.isTouched, true)
+  t.equal(res2.dragCount, 1)
+  const res3 = dragLeaveReducer(res2)
+  t.equal(res3.dragCount, 0)
+  t.equal(res3.blur, true)
+  t.equal(res3.focus, false)
+  t.equal(res3.isTouched, true)
+  t.equal(res3.value, null)
+  t.end()
+})
 test('reducer', (t) => {
   let state = reducer()
   t.ok(state.asMutable)

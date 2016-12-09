@@ -54,6 +54,10 @@ export const onBlur = createAction(BLUR)
 // On every change of field value.
 export const CHANGE = 'field/CHANGE'
 export const onChange = createAction(CHANGE)
+export const DRAG_ENTER = 'field/DRAG_ENTER'
+export const onDragEnter = createAction(DRAG_ENTER)
+export const DRAG_LEAVE = 'field/DRAG_LEAVE'
+export const onDragLeave = createAction(DRAG_LEAVE)
 // When a user clicks on a field to edit it.
 export const FOCUS = 'field/FOCUS'
 export const onFocus = createAction(FOCUS)
