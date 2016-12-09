@@ -8,32 +8,32 @@ import { formEvent, formHandler, fieldEvent } from './mock'
 test('actions', (t) => {
   t.deepEqual(
     action.clear(),
-    { meta: { prefix: [ 'default' ] }, type: action.CLEAR },
+    { meta: { prefix: ['default'] }, type: action.CLEAR },
     'clear()',
   )
   t.deepEqual(
     action.clearError('fieldId', ''),
-    { meta: { prefix: [ 'fieldId' ] }, type: action.CLEAR_ERROR },
+    { meta: { prefix: ['fieldId'] }, type: action.CLEAR_ERROR },
     'clearError()',
   )
   t.deepEqual(
     action.close('fieldId', 'yum'),
-    { meta: { prefix: [ 'fieldId' ] }, type: action.CLOSE },
+    { meta: { prefix: ['fieldId'] }, type: action.CLOSE },
     'close()',
   )
   t.deepEqual(
-    action.onChange([ 'login', 'email' ], 'a'),
-    { meta: { prefix: [ 'login', 'email' ] }, type: action.CHANGE, payload: 'a' }
+    action.onChange(['login', 'email'], 'a'),
+    { meta: { prefix: ['login', 'email'] }, type: action.CHANGE, payload: 'a' }
   )
   t.deepEqual(
     action.meta(null, {}, { extra: true }),
-    { meta: { extra: true, prefix: [ 'default' ] }, type: action.META, payload: {} }
+    { meta: { extra: true, prefix: ['default'] }, type: action.META, payload: {} }
   )
   t.end()
 })
 test('savedProgress', (t) => {
   function dispatch(expected) { return progress => t.deepEqual(progress, expected, 'dispatched') }
-  const act = { meta: { prefix: [ 'default' ] }, type: 'field/SAVED_PROGRESS', payload: 10 }
+  const act = { meta: { prefix: ['default'] }, type: 'field/SAVED_PROGRESS', payload: 10 }
   action.savedProgress(null, 10)(dispatch(act))
   t.equal(action.savedProgress(null, 11)(t.fail), false, 'not multiple of 5.')
   t.end()
@@ -43,7 +43,7 @@ test('getFieldEvents', (t) => {
   t.deepEqual(functions(act), formEvent, 'formEvent')
   t.deepEqual(
     act.onChange('c'),
-    { meta: { prefix: [ 'foo', 'bar' ] }, type: action.CHANGE, payload: 'c' }
+    { meta: { prefix: ['foo', 'bar'] }, type: action.CHANGE, payload: 'c' }
   )
   t.end()
 })
@@ -51,20 +51,20 @@ test('action bundles', (t) => {
   t.deepEqual(functions(action.formEvent), formEvent, 'formEvent')
   t.deepEqual(functions(action.formHandler), formHandler, 'formHandler')
   t.deepEqual(functions(action.fieldEvent), fieldEvent, 'fieldEvent')
-  const acts = action.getActions([ 'default' ])
-  t.deepEqual(keys(acts), [ 'fieldEvent', 'formEvent', 'formHandler' ])
+  const acts = action.getActions(['default'])
+  t.deepEqual(keys(acts), ['fieldEvent', 'formEvent', 'formHandler'])
   t.deepEqual(functions(acts.formEvent), formEvent)
   t.deepEqual(functions(acts.formHandler), formHandler)
   t.deepEqual(functions(acts.fieldEvent), fieldEvent)
   t.deepEqual(
     acts.formEvent.onChange('b'),
-    { meta: { prefix: [ 'default' ] }, type: action.CHANGE, payload: 'b' }
+    { meta: { prefix: ['default'] }, type: action.CHANGE, payload: 'b' }
   )
   t.end()
 })
 test('savedProgress', (t) => {
   function dispatch(expected) { return progress => t.deepEqual(progress, expected, 'dispatched') }
-  const act = { meta: { prefix: [ 'default' ] }, type: 'field/SAVED_PROGRESS', payload: 10 }
+  const act = { meta: { prefix: ['default'] }, type: 'field/SAVED_PROGRESS', payload: 10 }
   action.savedProgress(null, 10)(dispatch(act))
   t.equal(action.savedProgress(null, 11)(t.fail), false, 'not multiple of 5.')
   t.end()
