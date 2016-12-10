@@ -1,6 +1,6 @@
-import { flow, get, isFunction, nthArg, partial, property } from 'lodash'
+import { get, isFunction, partial, property } from 'lodash'
 import { createSelector } from 'reselect'
-import { select } from 'cape-select'
+import { getProp, select } from 'cape-select'
 import { defaultState } from './reducer'
 import { getPrefix } from './utils'
 
@@ -59,8 +59,6 @@ export function selectFieldState(state, prefix, selectFormState = selectForm) {
 export function getFieldState(state, props) {
   return selectFieldState(state, props.prefix, props.selectForm)
 }
-// Yes, this is ugly but allows for easy field comparisons.
-export function getProp(prop) { return flow(nthArg(1), property(prop)) }
 export const getState = createSelector(
   getFieldState, getProp('initialValue'), getProp('validate'), derivedState
 )
