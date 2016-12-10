@@ -1,4 +1,8 @@
 import immutable from 'seamless-immutable'
+import { combineReducers, createStore } from 'redux'
+import reducer, { REDUCER_KEY } from '../'
+
+export const store = createStore(combineReducers({ [REDUCER_KEY]: reducer }))
 
 export const emptyGetStateResult = immutable({
   blur: false,

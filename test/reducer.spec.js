@@ -1,9 +1,14 @@
 import test from 'tape'
 import { flow } from 'lodash'
-import { close, fieldReducer as reducer, onChange, onSubmit, open, savedProgress } from '../src'
+import {
+  close, fieldReducer as reducer, onChange, onDragEnter, onDragLeave, onSubmit, open, savedProgress,
+} from '../src'
 import {
   blurReducer, defaultState, dragEnterReducer, dragLeaveReducer, focusReducer, getDragCount,
 } from '../src/reducer'
+import { store } from './mock'
+
+const { dispatch, getState } = store
 
 test('getDragCount', (t) => {
   t.equal(getDragCount(defaultState), 0)
@@ -40,6 +45,8 @@ test('dragEnterReducer', (t) => {
   const res2 = dragEnterReducer(res)
   t.equal(res2.focus, true)
   t.equal(res2.dragCount, 2)
+  dispatch(undefined, onDragEnter())
+  t.equal(getState().dragCount, 1)
   t.end()
 })
 test('dragLeaveReducer', (t) => {
@@ -49,6 +56,8 @@ test('dragLeaveReducer', (t) => {
   t.equal(res.focus, false)
   t.equal(res.isTouched, true)
   t.equal(res.value, null)
+  dispatch(undefined, onDragLeave())
+  t.equal(getState().dragCount, -1)
   const res2 = flow(dragEnterReducer, dragEnterReducer, dragLeaveReducer)(defaultState)
   t.equal(res2.blur, false)
   t.equal(res2.focus, true)

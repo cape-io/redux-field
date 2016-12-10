@@ -1,5 +1,8 @@
+import reducer from './reducer'
+
 export * from './utils'
 export * from './actions'
 export connectField from './connectField'
-export fieldReducer from './reducer'
+export const fieldReducer = reducer
 export * from './select'
+export default reducer

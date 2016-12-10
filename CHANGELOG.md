@@ -1,3 +1,14 @@
+## [4.1.0]
+> 2016-12-10
+
+* Added `onDragEnter` and `onDragLeave` actions. Two onDragEnter calls will require two onDragLeave actions before blur status will activated.
+* Added reducer as default export. How was that not the case before?
+* Exporting `REDUCER_KEY` const for default mounting place.
+
+## [4.0.0]
+
+* Changes to state props to have `is` prefix if the value is expected bool. EG `isClosed`, `isDirty`, `isEditing`, `isOpen`, `isSaving`, `isTouched`.
+
 ## [3.4.1]
 > 2016-10-03
 

@@ -4,9 +4,10 @@ import { select } from 'cape-select'
 import { defaultState } from './reducer'
 import { getPrefix } from './utils'
 
-export function selectForm(state) {
-  return state.form
-}
+export const REDUCER_KEY = 'form'
+
+export const selectForm = property(REDUCER_KEY)
+
 // fieldSelector(prefixArray)(state)
 export const getFieldSelector = partial(select, selectForm)
 
@@ -33,17 +34,17 @@ export function derivedState(state, initialValue, validate) {
   const isValid = !errorVal && !pristine
   const isOpen = state.blur || state.focus
   return state.merge({
-    isEditing: state.focus && !pristine,
-    isDirty: !pristine,
     errorMessage: errorVal && errorVal.message ? errorVal.message : errorVal,
     hasError: !!errorVal,
     initialValue: initVal,
     invalidValue: state.invalid[state.value] || null,
     isClosed: !isOpen,
-    isValid,
+    isDirty: !pristine,
+    isEditing: state.focus && !pristine,
     isOpen,
     isPristine: pristine,
     isSaved: !pristine && state.value === state.savedValue,
+    isValid,
     status: getStatus(errorVal, isValid),
     suggestion: errorVal && errorVal.suggestion ? errorVal.suggestion : null,
     validValue: state.valid[state.value] || null,
