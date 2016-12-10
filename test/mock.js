@@ -1,6 +1,6 @@
 import immutable from 'seamless-immutable'
 import { combineReducers, createStore } from 'redux'
-import reducer, { REDUCER_KEY } from '../'
+import reducer, { REDUCER_KEY } from '../src'
 
 export const store = createStore(combineReducers({ [REDUCER_KEY]: reducer }))
 

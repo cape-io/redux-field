@@ -1,17 +1,19 @@
 import { curry, noop, isArray, isEmpty, isObject, isString, mapValues, partial } from 'lodash'
 import { createAction as actionCreate, getPayload } from 'cape-redux'
 
+export const PREFIX = 'default'
+
 export function getPrefix(prefix) {
-  if (prefix && isString(prefix)) {
+  if (isString(prefix)) {
     return prefix.split('.')
   }
   if (isArray(prefix) && !isEmpty(prefix)) {
     return prefix
   }
   if (isObject(prefix) && prefix.fieldId && prefix.formId) {
-    return [ prefix.formId, prefix.fieldId ]
+    return [prefix.formId, prefix.fieldId]
   }
-  return [ 'default' ]
+  return [PREFIX]
 }
 
 export function getMeta(prefixRaw, payload, extraMeta) {

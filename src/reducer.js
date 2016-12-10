@@ -33,6 +33,7 @@ export const focusReducer = state => state.merge({ blur: false, focus: true, isT
 export const dragEnterReducer = flow(focusReducer,
   state => state.set('dragCount', state.dragCount + 1)
 )
+
 export const dragLeaveReducer = flow(
   state => state.set('dragCount', state.dragCount - 1),
   condId([flow(getDragCount, gte(0)), blurReducer])
