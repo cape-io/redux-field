@@ -1,3 +1,8 @@
+## [4.2.0]
+> 2016-12-15
+
+* The blur reducer now sets `dragCount` to `0`. This makes the `onBlur` action workable for `onDrop`.
+
 ## [4.1.0]
 > 2016-12-10
 

@@ -15,9 +15,11 @@ test('getDragCount', (t) => {
   t.end()
 })
 test('blurReducer', (t) => {
-  const state = defaultState.merge({ blur: false, focus: true, isTouched: false, value: 'foo' })
+  const state = defaultState.merge({
+    blur: false, dragCount: 1, focus: true, isTouched: false, value: 'foo' })
   const res = blurReducer(state, 'bar')
   t.equal(res.blur, true)
+  t.equal(res.dragCount, 0)
   t.equal(res.focus, false)
   t.equal(res.isTouched, true)
   t.equal(res.value, 'bar')
@@ -50,8 +52,8 @@ test('dragEnterReducer', (t) => {
   t.end()
 })
 test('dragLeaveReducer', (t) => {
-  const res = dragLeaveReducer(defaultState)
-  t.equal(res.dragCount, -1)
+  const res = dragLeaveReducer(dragEnterReducer(defaultState))
+  t.equal(res.dragCount, 0)
   t.equal(res.blur, true)
   t.equal(res.focus, false)
   t.equal(res.isTouched, true)
@@ -59,7 +61,7 @@ test('dragLeaveReducer', (t) => {
   dispatch(onDragLeave())
   t.equal(selectFieldState(getState()).dragCount, 0)
   dispatch(onDragLeave())
-  t.equal(selectFieldState(getState()).dragCount, -1)
+  t.equal(selectFieldState(getState()).dragCount, 0)
   const res2 = flow(dragEnterReducer, dragEnterReducer, dragLeaveReducer)(defaultState)
   t.equal(res2.blur, false)
   t.equal(res2.focus, true)

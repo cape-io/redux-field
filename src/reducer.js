@@ -27,8 +27,9 @@ export const defaultState = immutable({
 })
 export const getDragCount = property('dragCount')
 
-export const blurReducer = (state, payload) =>
-  state.merge({ blur: true, focus: false, isTouched: true, value: payload || state.value })
+export const blurReducer = (state, payload) => state.merge({
+  blur: true, dragCount: 0, focus: false, isTouched: true, value: payload || state.value,
+})
 export const focusReducer = state => state.merge({ blur: false, focus: true, isTouched: true })
 export const dragEnterReducer = flow(focusReducer,
   state => state.set('dragCount', state.dragCount + 1)
