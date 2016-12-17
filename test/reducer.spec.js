@@ -127,7 +127,6 @@ test('savedProgress', (t) => {
 test('saveProgress', (t) => {
   dispatch(saveProgress(null, { bytesTransferred: 256, totalBytes: 510 }))
   const state = getState()
-  console.log(state.form.default)
   t.equal(state.form.default.savedProgress, 50)
   t.equal(state.form.default.isSaving, true)
   t.end()
