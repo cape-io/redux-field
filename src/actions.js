@@ -1,7 +1,8 @@
-import mapKeys from 'lodash/mapKeys'
-import memoize from 'lodash/memoize'
+import { flow, mapKeys, memoize, nthArg } from 'lodash'
 
-import { createAction, getProgress, mapPartial } from './utils'
+import { createAction as actionCreate } from 'cape-redux'
+
+import { createAction, getMeta, getProgress, mapPartial } from './utils'
 
 // Close the field. Reset all values to default.
 export const CLEAR = 'field/CLEAR'
@@ -35,6 +36,7 @@ export function savedProgress(prefix, valueOrEvent) {
   return dispatch =>
     (progress % 5 === 0 && dispatch(action(prefix, progress))) || false
 }
+export const saveProgress = actionCreate(SAVED_PROGRESS, flow(nthArg(1), getProgress), getMeta)
 
 // Has been saved on server.
 export const SAVED = 'field/SAVED'

@@ -1,3 +1,7 @@
+## [4.4.0]
+
+* `saveProgress` is more standard version of `savedProgress`. No thunk, no wait for multiple of 5. Send all progress to reducer.
+
 ## [4.3.0]
 
 * `savedProgress` correctly sets `isSaving` to true.
