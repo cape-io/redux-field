@@ -1,3 +1,7 @@
+## [4.4.1]
+
+* `getProgress` uses `_.has` instead of truthy for object fields.
+
 ## [4.4.0]
 
 * `saveProgress` is more standard version of `savedProgress`. No thunk, no wait for multiple of 5. Send all progress to reducer.

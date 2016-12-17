@@ -1,4 +1,4 @@
-import { curry, noop, isArray, isEmpty, isObject, isString, mapValues, partial } from 'lodash'
+import { curry, has, noop, isArray, isEmpty, isObject, isString, mapValues, partial } from 'lodash'
 import { createAction as actionCreate, getPayload } from 'cape-redux'
 
 export const PREFIX = 'default'
@@ -39,8 +39,9 @@ export function roundNumber(progress, total) {
 }
 export function getProgress(value) {
   if (isObject(value)) {
-    if (value.loaded && value.total) return roundNumber(value.loaded, value.total)
-    if (value.bytesTransferred && value.totalBytes) {
+    const hasProp = partial(has, value)
+    if (hasProp('loaded') && hasProp('total')) return roundNumber(value.loaded, value.total)
+    if (hasProp('bytesTransferred') && hasProp('totalBytes')) {
       return roundNumber(value.bytesTransferred, value.totalBytes)
     }
   }

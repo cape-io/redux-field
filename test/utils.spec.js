@@ -31,5 +31,6 @@ test('getProgress', (t) => {
   t.equal(getProgress(10.2), 10, 'number')
   t.equal(getProgress({ loaded: 256, total: 510 }), 50, 'event')
   t.equal(getProgress({ bytesTransferred: 256, totalBytes: 510 }), 50, 'firebase')
+  t.equal(getProgress({ bytesTransferred: 0, totalBytes: 510 }), 0, 'zero progress')
   t.end()
 })
