@@ -1,7 +1,8 @@
 import test from 'tape'
 import { flow } from 'lodash'
 import reducer, {
-  close, onChange, onDragEnter, onDragLeave, onSubmit, open, savedProgress, selectFieldState,
+  close, onChange, onDragEnter, onDragLeave, onSubmit, open,
+  saveProgress, savedProgress, selectFieldState,
 } from '../src'
 import {
   blurReducer, defaultState, dragEnterReducer, dragLeaveReducer, focusReducer, getDragCount,
@@ -121,5 +122,13 @@ test('savedProgress', (t) => {
     t.equal(state.default.savedProgress, 10, 'savedProgress')
   }
   savedProgress(null, 10)(disp)
+  t.end()
+})
+test('saveProgress', (t) => {
+  dispatch(saveProgress(null, { bytesTransferred: 256, totalBytes: 510 }))
+  const state = getState()
+  console.log(state.form.default)
+  t.equal(state.form.default.savedProgress, 50)
+  t.equal(state.form.default.isSaving, true)
   t.end()
 })
