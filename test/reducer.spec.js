@@ -5,6 +5,7 @@ import reducer, {
 } from '../src'
 import {
   blurReducer, defaultState, dragEnterReducer, dragLeaveReducer, focusReducer, getDragCount,
+  saveProgressReducer,
 } from '../src/reducer'
 import { store } from './mock'
 
@@ -113,10 +114,12 @@ test('open', (t) => {
 })
 test('savedProgress', (t) => {
   t.equal(defaultState.savedProgress, 0, 'defaultState')
-  function dispatch(action) {
+  t.equal(saveProgressReducer(defaultState, 0).isSaving, true)
+  function disp(action) {
     const state = reducer(undefined, action)
+    t.equal(state.default.isSaving, true, 'isSaving')
     t.equal(state.default.savedProgress, 10, 'savedProgress')
   }
-  savedProgress(null, 10)(dispatch)
+  savedProgress(null, 10)(disp)
   t.end()
 })

@@ -34,9 +34,15 @@ export function createPayload(prefix, payload) {
 export function createAction(type, hasPayload = true) {
   return actionCreate(type, hasPayload ? createPayload : noop, getMeta)
 }
+export function roundNumber(progress, total) {
+  return parseInt((progress / total) * 100, 10)
+}
 export function getProgress(value) {
-  if (isObject(value) && value.loaded && value.total) {
-    return parseInt((value.loaded / value.total) * 100, 10)
+  if (isObject(value)) {
+    if (value.loaded && value.total) return roundNumber(value.loaded, value.total)
+    if (value.bytesTransferred && value.totalBytes) {
+      return roundNumber(value.bytesTransferred, value.totalBytes)
+    }
   }
   return parseInt(value, 10)
 }

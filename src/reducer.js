@@ -39,6 +39,11 @@ export const dragLeaveReducer = flow(
   state => state.set('dragCount', state.dragCount - 1),
   condId([flow(getDragCount, gte(0)), blurReducer])
 )
+export const set = fieldId => (state, payload) => state.set(fieldId, payload)
+export const setVal = (fieldId, value) => state => state.set(fieldId, value)
+export const saveReducer = setVal('isSaving', true)
+export const saveProgressReducer = flow(set('savedProgress'), saveReducer)
+
 export const reducers = {
   [CLEAR]: () => defaultState,
   [CLEAR_ERROR]: state => state.set('error', defaultState.error),
@@ -55,8 +60,8 @@ export const reducers = {
     isTouched: true,
     value: state.value || payload.initialValue || null,
   }),
-  [SAVE]: state => state.set('isSaving', true),
-  [SAVED_PROGRESS]: (state, payload) => state.set('savedProgress', payload),
+  [SAVE]: saveReducer,
+  [SAVED_PROGRESS]: saveProgressReducer,
   [SAVED]: (state, payload) => state.merge({
     error: defaultState.error,
     id: get(payload, 'id', state.id),

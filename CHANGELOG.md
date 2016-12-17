@@ -1,3 +1,8 @@
+## [4.3.0]
+
+* `savedProgress` correctly sets `isSaving` to true.
+* `getProgress()` can accept firebase progress object.
+
 ## [4.2.0]
 > 2016-12-15
 
