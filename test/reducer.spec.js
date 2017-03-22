@@ -1,12 +1,13 @@
 import test from 'tape'
 import { flow } from 'lodash'
+import immutable from 'seamless-immutable'
 import reducer, {
   close, onChange, onDragEnter, onDragLeave, onSubmit, open,
   saveProgress, savedProgress, selectFieldState,
 } from '../src'
 import {
-  blurReducer, defaultState, dragEnterReducer, dragLeaveReducer, focusReducer, getDragCount,
-  saveProgressReducer,
+  blurReducer, applyError, defaultState, dragEnterReducer, dragLeaveReducer, errorReducer,
+  focusReducer, getDragCount, saveProgressReducer,
 } from '../src/reducer'
 import { store } from './mock'
 
@@ -16,17 +17,40 @@ test('getDragCount', (t) => {
   t.equal(getDragCount(defaultState), 0)
   t.end()
 })
-test('blurReducer', (t) => {
-  const state = defaultState.merge({
-    blur: false, dragCount: 1, focus: true, isTouched: false, value: 'foo' })
-  const res = blurReducer(state, 'bar')
+function checkBlur(t, res, val) {
   t.equal(res.blur, true)
   t.equal(res.dragCount, 0)
   t.equal(res.focus, false)
   t.equal(res.isTouched, true)
-  t.equal(res.value, 'bar')
+  t.equal(res.value, val)
+}
+test('blurReducer', (t) => {
+  const state = defaultState.merge({
+    blur: false, dragCount: 1, focus: true, isTouched: false, value: 'foo' })
+  const res = blurReducer(state, 'bar')
+  checkBlur(t, res, 'bar')
   const res2 = blurReducer(state)
-  t.equal(res2.value, 'foo')
+  checkBlur(t, res2, 'foo')
+  t.end()
+})
+function checkError(t, res, val) {
+  t.equal(res.error, val)
+  t.ok(res.isTouched)
+}
+test('applyError', (t) => {
+  const err = 'error msg'
+  const res = applyError(immutable({}), err)
+  checkError(t, res, err)
+  checkError(t, applyError(res, 'junk'), 'junk')
+  t.end()
+})
+test('errorReducer', (t) => {
+  const err = 'error msg'
+  const res = errorReducer(immutable({}), err)
+  checkError(t, res, err)
+  const res2 = errorReducer(immutable({}), { error: err, value: 'bas' })
+  checkError(t, res2, err)
+  checkBlur(t, res2, 'bas')
   t.end()
 })
 test('focusReducer', (t) => {

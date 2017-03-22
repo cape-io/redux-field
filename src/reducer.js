@@ -28,9 +28,32 @@ export const defaultState = immutable({
 export const getDragCount = property('dragCount')
 
 export const blurReducer = (state, payload) => state.merge({
-  blur: true, dragCount: 0, focus: false, isTouched: true, value: payload || state.value,
+  blur: true,
+  dragCount: 0,
+  focus: false,
+  isTouched: true,
+  value: payload || state.value,
 })
-export const focusReducer = state => state.merge({ blur: false, focus: true, isTouched: true })
+export const closeReducer = state => state.merge({
+  blur: defaultState.blur,
+  focus: defaultState.focus,
+  isTouched: true,
+})
+export const applyError = (state, payload) => state.merge({
+  error: payload,
+  isTouched: true,
+})
+export const errorReducer = (state, payload) => {
+  if (payload.error && payload.value) {
+    return blurReducer(applyError(state, payload.error), payload.value)
+  }
+  return applyError(state, payload)
+}
+export const focusReducer = state => state.merge({
+  blur: false,
+  focus: true,
+  isTouched: true,
+})
 export const dragEnterReducer = flow(focusReducer,
   state => state.set('dragCount', state.dragCount + 1)
 )
@@ -39,36 +62,45 @@ export const dragLeaveReducer = flow(
   state => state.set('dragCount', state.dragCount - 1),
   condId([flow(getDragCount, gte(0)), blurReducer])
 )
+export const openReducer = (state, payload = {}) => state.merge({
+  focus: true,
+  id: payload.id || defaultState.id,
+  initialValue: state.initialValue || payload.initialValue || null,
+  isTouched: true,
+  value: state.value || payload.initialValue || null,
+})
+export const savedReducer = (state, payload) => state.merge({
+  error: defaultState.error,
+  id: get(payload, 'id', state.id),
+  isSaving: defaultState.isSaving,
+  savedProgress: defaultState.savedProgress,
+  savedValue: get(payload, 'value', state.value),
+})
 export const set = fieldId => (state, payload) => state.set(fieldId, payload)
 export const setVal = (fieldId, value) => state => state.set(fieldId, value)
 export const saveReducer = setVal('isSaving', true)
 export const saveProgressReducer = flow(set('savedProgress'), saveReducer)
 
+export const submitReducer = (state, payload) => state.merge({
+  blur: defaultState.blur,
+  error: defaultState.error,
+  focus: defaultState.focus,
+  isSaving: true,
+  value: payload || state.value,
+})
+
 export const reducers = {
   [CLEAR]: () => defaultState,
   [CLEAR_ERROR]: state => state.set('error', defaultState.error),
   // Should close also change initialValue?
-  [CLOSE]: state =>
-    state.merge({ blur: defaultState.blur, focus: defaultState.focus, isTouched: true }),
-  [ERROR]: (state, payload) => state.merge({ error: payload }),
+  [CLOSE]: closeReducer,
+  [ERROR]: errorReducer,
   [INVALID]: (state, payload) => state.setIn(['invalid', payload.key], payload.value),
   [META]: (state, payload) => state.merge({ meta: payload, isTouched: true }, { deep: true }),
-  [OPEN]: (state, payload = {}) => state.merge({
-    focus: true,
-    id: payload.id || defaultState.id,
-    initialValue: state.initialValue || payload.initialValue || null,
-    isTouched: true,
-    value: state.value || payload.initialValue || null,
-  }),
+  [OPEN]: openReducer,
   [SAVE]: saveReducer,
   [SAVED_PROGRESS]: saveProgressReducer,
-  [SAVED]: (state, payload) => state.merge({
-    error: defaultState.error,
-    id: get(payload, 'id', state.id),
-    isSaving: defaultState.isSaving,
-    savedProgress: defaultState.savedProgress,
-    savedValue: get(payload, 'value', state.value),
-  }),
+  [SAVED]: savedReducer,
   // This is another spot you could save meta data about a particular value.
   [VALID]: (state, payload) => state.setIn(['valid', payload.key], payload.value),
   [BLUR]: blurReducer,
@@ -76,13 +108,7 @@ export const reducers = {
   [DRAG_ENTER]: dragEnterReducer,
   [DRAG_LEAVE]: dragLeaveReducer,
   [FOCUS]: focusReducer,
-  [SUBMIT]: (state, payload) => state.merge({
-    blur: defaultState.blur,
-    error: defaultState.error,
-    focus: defaultState.focus,
-    isSaving: true,
-    value: payload || state.value,
-  }),
+  [SUBMIT]: submitReducer,
 }
 const options = { makeImmutable: true, skipErrors: false }
 export const fieldReducer = createReducer(reducers, defaultState, options)

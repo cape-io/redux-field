@@ -1,3 +1,7 @@
+## [4.5.0]
+
+* Can send `error({ value: 'blue', error: 'blah' })` and it will apply both blur and error reducers to state.
+
 ## [4.4.1]
 
 * `getProgress` uses `_.has` instead of truthy for object fields.
