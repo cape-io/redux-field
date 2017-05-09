@@ -50,7 +50,9 @@ export function derivedState(state, initialValue, validate) {
     validValue: state.valid[state.value] || null,
   })
 }
-
+export function calcState(state) {
+  
+}
 // Please note that it will return defaultState if there is an invalid prefix.
 export function selectFieldState(state, prefix, selectFormState = selectForm) {
   return get(selectFormState(state), getPrefix(prefix), defaultState)

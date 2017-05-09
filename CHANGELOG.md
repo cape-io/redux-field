@@ -1,3 +1,6 @@
+## [5.0.0]
+
+* Split out `connectField` into a new module `redux-field-connect`.
 ## [4.5.0]
 
 * Can send `error({ value: 'blue', error: 'blah' })` and it will apply both blur and error reducers to state.
