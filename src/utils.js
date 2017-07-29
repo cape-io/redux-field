@@ -3,7 +3,7 @@ import { createAction as actionCreate, getPayload } from 'cape-redux'
 
 export const PREFIX = 'default'
 
-export function getPrefix(prefix) {
+export function createPrefix(prefix) {
   if (isString(prefix)) {
     return prefix.split('.')
   }
@@ -17,7 +17,7 @@ export function getPrefix(prefix) {
 }
 
 export function getMeta(prefixRaw, payload, extraMeta) {
-  const prefix = getPrefix(prefixRaw)
+  const prefix = createPrefix(prefixRaw)
   return isObject(extraMeta) ? { ...extraMeta, prefix } : { prefix }
 }
 export function preventDefault(event) {

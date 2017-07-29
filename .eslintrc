@@ -1,6 +1,6 @@
 {
   "extends": [
-    "airbnb",
+    "airbnb-base",
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
@@ -35,12 +35,6 @@
     "semi": [ 2, "never" ]
   },
   "plugins": [
-    "react", "import"
+    "import"
   ],
-  "settings": {
-    "import/parser": "babel-eslint",
-    "import/resolve": {
-      "moduleDirectory": ["node_modules", "src"]
-    }
-  }
 }

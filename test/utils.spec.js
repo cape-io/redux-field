@@ -1,16 +1,16 @@
 import test from 'tape'
 
-import { getMeta, createPayload, getPrefix, getProgress } from '../src/utils'
+import { getMeta, createPayload, createPrefix, getProgress } from '../src/utils'
 import { nativeEvent } from './mock'
 
 const prefix = ['foo', 'bar']
-test('getPrefix', (t) => {
-  t.deepEqual(getPrefix(), ['default'], 'noop returns default')
-  t.deepEqual(getPrefix(1), ['default'], 'number returns default')
-  t.deepEqual(getPrefix({ foo: 'bar' }), ['default'], 'obj returns default')
-  t.equal(getPrefix(prefix), prefix, 'array returns itself')
-  t.deepEqual(getPrefix('foo.bar'), prefix, 'dot notation is expanded')
-  t.deepEqual(getPrefix({ fieldId: 'bar', formId: 'foo' }), prefix, 'fieldId formId obj')
+test('createPrefix', (t) => {
+  t.deepEqual(createPrefix(), ['default'], 'noop returns default')
+  t.deepEqual(createPrefix(1), ['default'], 'number returns default')
+  t.deepEqual(createPrefix({ foo: 'bar' }), ['default'], 'obj returns default')
+  t.equal(createPrefix(prefix), prefix, 'array returns itself')
+  t.deepEqual(createPrefix('foo.bar'), prefix, 'dot notation is expanded')
+  t.deepEqual(createPrefix({ fieldId: 'bar', formId: 'foo' }), prefix, 'fieldId formId obj')
   t.end()
 })
 test('getMeta', (t) => {

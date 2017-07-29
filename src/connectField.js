@@ -21,11 +21,9 @@ export function mapDispatchToProps(dispatch, ownProps) {
 // The prefix can be sent via init option or with props on each instance.
 export default function connectField(options = {}) {
   // Pass in a component and it will get connected for you.
-  return (Component) => {
-    const mapProps = (state, props) =>
-      mapStateToProps(state, { ...options, ...props })
-    const mapDispatch = (dispatch, props) =>
-      mapDispatchToProps(dispatch, { ...options, ...props })
-    return connect(mapProps, mapDispatch)(Component)
-  }
+  const mapProps = (state, props) =>
+    mapStateToProps(state, { ...options, ...props })
+  const mapDispatch = (dispatch, props) =>
+    mapDispatchToProps(dispatch, { ...options, ...props })
+  return connect(mapProps, mapDispatch)
 }

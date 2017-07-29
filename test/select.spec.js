@@ -2,7 +2,7 @@ import test from 'tape'
 import { noop } from 'lodash'
 
 import { invalid, onChange, valid } from '../src/actions'
-import { getErrorVal, getState, selectFieldState } from '../src/select'
+import { getErrorVal, getState, selectFieldState, selectFieldValue } from '../src/select'
 import reducer, { defaultState } from '../src/reducer'
 
 import { emptyGetStateResult } from './mock'
@@ -76,5 +76,11 @@ test('selectFieldState', (t) => {
     'foo',
     'basic select value'
   )
+  t.end()
+})
+test('selectFieldValue', (t) => {
+  const state = { form: { some: { field: { value: 'bar' } } } }
+  const props = { prefix: 'some.field' }
+  t.equal(selectFieldValue(state, props), 'bar')
   t.end()
 })
