@@ -1,14 +1,23 @@
-# redux-field 3.4.1
+# redux-field 5.0.0
 
 [![Build Status](https://travis-ci.org/cape-io/redux-field.svg?branch=master)](https://travis-ci.org/cape-io/redux-field)
 
 For when you want to control individual form fields with redux. Think something like https://vitalets.github.io/x-editable/ for Redux.
 
-Nothing should stop you from using the same reducer/actions for an entire form. However the main purpose of this is to save individual form fields as they change with a backend.
+Nothing should stop you from using the same reducer/actions for an entire form.
 
-## `connectField({})(Component)`
+## Add reducer to redux.
+
+```javascript
+import fieldReducer from 'redux-field'
+
+const reducers = combineReducers({ form: fieldReducer })
+const store = createStore(reducers)
+```
+
 ### props
 Wrapping a component with connectField will add a `form` property. It includes the following:
+
 #### `form`
 * `editing`: state.focus && !pristine,
 * `dirty`: !pristine,
