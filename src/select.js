@@ -55,9 +55,10 @@ export function derivedState(state, initialValue, validate) {
 // }
 
 // The new core of selecting state based on prefix.
-export const getPrefix = flow(property('prefix'), createPrefix)
-export const selectPrefix = flow(nthArg(1), getPrefix)
-export const getFormState = flow(getPrefix, concat(REDUCER_KEY), getOr(defaultState))
+export const getPrefix = property('prefix')
+export const selectPrefix = flow(nthArg(1), getPrefix, createPrefix)
+export const fieldSelector = flow(createPrefix, concat(REDUCER_KEY), getOr(defaultState))
+export const getFormState = flow(getPrefix, fieldSelector)
 export const selectField = (state, props) => getFormState(props)(state)
 export const selectFieldValue = flow(selectField, property('value'))
 

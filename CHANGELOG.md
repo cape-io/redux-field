@@ -1,3 +1,7 @@
+## [5.1.1]
+
+* `fieldSelector()`
+
 ## [5.1.0]
 
 * utils `getPrefix` is now `createPrefix`.
