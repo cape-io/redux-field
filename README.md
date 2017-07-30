@@ -84,7 +84,8 @@ Actions related to the field and/or its container.
 
 #### `formHandler`
 
-Same as `formEvent` but `on` replaced with `handle`. (`handleBlur, handleChange, handleDragEnter, handleDragLeave, handleFocus, handleInput, handleSubmit`)
+Same as `formEvent` but `on` replaced with `handle`.  
+`handleBlur, handleChange, handleDragEnter, handleDragLeave, handleFocus, handleInput, handleSubmit`
 
 ## Selectors
 
