@@ -61,6 +61,7 @@ export const fieldSelector = flow(createPrefix, concat(REDUCER_KEY), getOr(defau
 export const getFormState = flow(getPrefix, fieldSelector)
 export const selectField = (state, props) => getFormState(props)(state)
 export const selectFieldValue = flow(selectField, property('value'))
+export const calcFieldState = flow(selectField, derivedState)
 
 // Older stuff
 // Please note that it will return defaultState if there is an invalid prefix.
