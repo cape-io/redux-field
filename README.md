@@ -1,4 +1,4 @@
-# redux-field 5.0.0
+# redux-field 5.1.1
 
 [![Build Status](https://travis-ci.org/cape-io/redux-field.svg?branch=master)](https://travis-ci.org/cape-io/redux-field)
 
@@ -33,18 +33,21 @@ Wrapping a component with connectField will add a `form` property. It includes t
 * `suggestion`: errorVal && errorVal.suggestion ? errorVal.suggestion : null,
 * `validValue`: state.valid[state.value] || null,
 
+### Actions
+
 #### `fieldEvent`
-* `clear`
-* `clearError`
-* `close`
-* `error`
-* `invalid`
-* `meta`
-* `open`
-* `save`
-* `saved`
-* `savedProgress`
-* `valid`
+
+* `clear` - Close the field. Reset all values to default.
+* `clearError` - Reset `error` to `null`.
+* `close` - The field has been "closed". Allows you do something like display the field in its finished form instead of as an input.
+* `error` - Async error result. Sync errors should be calculated in container. See `derivedState()`.
+* `invalid` - Set values that are known invalid. Useful to keep track of previous results from API calls. Makes feedback faster and prevents unnecessary requests..
+* `meta` - Set metadata about the editing process or field. Here if you need a place to put extra information.
+* `open` - The first thing that is called to initiate editing of a field. Toggle the preview and input displays of a field.
+* `save` - When an async request has been made that is saving the updated value to the server.
+* `saved` - Current value has been saved.
+* `savedProgress` - Record upload/save progress. If saving a file and you want to keep track of how much has been uploaded.
+* `valid` - Similar to `invalid`. Save that a value is valid. Probably the result of an async request. Could also store temporary meta info about the value here.
 
 #### `formEvent`
 * `onBlur`
