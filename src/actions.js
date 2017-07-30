@@ -1,13 +1,11 @@
 import { flow, mapKeys, memoize, nthArg } from 'lodash'
-
 import { createAction as actionCreate } from 'cape-redux'
-
 import { createAction, getMeta, getProgress, mapPartial } from './utils'
 
 // Close the field. Reset all values to default.
 export const CLEAR = 'field/CLEAR'
 export const clear = createAction(CLEAR, false)
-// Not sure when you would use this.
+// Reset error to null.
 export const CLEAR_ERROR = 'field/CLEAR_ERROR'
 export const clearError = createAction(CLEAR_ERROR, false)
 // The field has been closed.
@@ -16,6 +14,7 @@ export const close = createAction(CLOSE, false)
 // Async error result. Sync errors should be calculated in container. See derivedState().
 export const ERROR = 'field/ERROR'
 export const error = createAction(ERROR)
+// Set values that are known invalid.
 export const INVALID = 'field/INVALID'
 export const invalid = createAction(INVALID)
 // Set metadata about the editing process. If you need a place to put extra information.
@@ -27,6 +26,9 @@ export const open = createAction(OPEN)
 // Saving to server.
 export const SAVE = 'field/SAVE'
 export const save = createAction(SAVE)
+// Has been saved on server.
+export const SAVED = 'field/SAVED'
+export const saved = createAction(SAVED)
 
 // Record upload/save progress.
 export const SAVED_PROGRESS = 'field/SAVED_PROGRESS'
@@ -37,10 +39,7 @@ export function savedProgress(prefix, valueOrEvent) {
     (progress % 5 === 0 && dispatch(action(prefix, progress))) || false
 }
 export const saveProgress = actionCreate(SAVED_PROGRESS, flow(nthArg(1), getProgress), getMeta)
-
-// Has been saved on server.
-export const SAVED = 'field/SAVED'
-export const saved = createAction(SAVED)
+// Similar to invalid. Save that a value is valid.
 export const VALID = 'field/VALID'
 export const valid = createAction(VALID)
 
