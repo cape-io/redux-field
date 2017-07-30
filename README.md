@@ -8,12 +8,16 @@ Nothing should stop you from using the same reducer/actions for an entire form.
 
 ## Usage
 
+First step is to add the reducer.
+
 ```javascript
 import fieldReducer from 'redux-field'
 
 const reducers = combineReducers({ form: fieldReducer })
 const store = createStore(reducers)
 ```
+
+If you want to wrap a React component that injects actions and props look at the [redux-field-connect](https://www.github.com/cape-io/redux-field-connect) module.
 
 ### props
 
