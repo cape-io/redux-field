@@ -37,6 +37,8 @@ Wrapping a component with connectField will add a `form` property. It includes t
 
 #### `fieldEvent`
 
+Actions related to the field and/or its container.
+
 * `clear` - Close the field. Reset all values to default.
 * `clearError` - Reset `error` to `null`.
 * `close` - The field has been "closed". Allows you do something like display the field in its finished form instead of as an input.
@@ -50,13 +52,21 @@ Wrapping a component with connectField will add a `form` property. It includes t
 * `valid` - Similar to `invalid`. Save that a value is valid. Probably the result of an async request. Could also store temporary meta info about the value here.
 
 #### `formEvent`
-* `onBlur`
-* `onChange`
-* `onFocus`
-* `onInput`
-* `onSubmit`
+
+Handlers for input field triggers.
+
+* `onBlur` - When the input has been exited.
+* `onChange` - Every time value changes.
+* `onDragEnter` - Drag and drop enter.
+* `onDragLeave` - Drag and drop leave.
+* `onFocus` - When the input has (been clicked on) focus.
+* `onInput` - Alias of `onChange`.
+* `onSubmit` - Return key inside a form.
 
 #### `formHandler`
+
+Same as `formEvent` but `on` replaced with `handle`.
+
 * `handleBlur`
 * `handleChange`
 * `handleFocus`
@@ -64,6 +74,7 @@ Wrapping a component with connectField will add a `form` property. It includes t
 * `handleSubmit`
 
 ## Selectors
+
 * `selectForm(state)`: state.form
 * `selectFieldState(state, prefix, selectFormState = selectForm)`: Please note that it will return defaultState if there is an invalid prefix.
 * `getFieldState(state, props)`: `selectFieldState(state, props.prefix, props.selectForm)`
