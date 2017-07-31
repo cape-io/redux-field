@@ -1,4 +1,4 @@
-# redux-field 5.1.1
+# redux-field 5.1.2
 
 [![Build Status](https://travis-ci.org/cape-io/redux-field.svg?branch=master)](https://travis-ci.org/cape-io/redux-field)
 

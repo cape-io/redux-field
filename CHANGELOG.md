@@ -1,3 +1,8 @@
+## [5.1.2]
+
+* `calcFieldState()` selector
+* Documentation
+
 ## [5.1.1]
 
 * `fieldSelector()`
