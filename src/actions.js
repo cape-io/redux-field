@@ -1,16 +1,29 @@
-import { flow, mapKeys, memoize, nthArg } from 'lodash'
-import { createAction as actionCreate } from 'cape-redux'
-import { createAction, getMeta, getProgress, mapPartial } from './utils'
+import {
+  constant, curry, mapKeys, mapValues, replace, set,
+} from 'lodash/fp'
+import { callWith } from 'understory'
+import {
+  createPrefix, getProgress,
+} from './utils'
+
+const basicAction = curry((type, prefix) => ({
+  type, meta: { prefix: createPrefix(prefix) },
+}))
+const noopAction = curry((type, prefix) => constant(basicAction(type, prefix)))
+const createAction = curry((type, prefix, payload) => set(
+  'payload', payload, basicAction(type, prefix),
+))
 
 // Close the field. Reset all values to default.
 export const CLEAR = 'field/CLEAR'
-export const clear = createAction(CLEAR, false)
+export const clear = basicAction(CLEAR)
 // Reset error to null.
 export const CLEAR_ERROR = 'field/CLEAR_ERROR'
-export const clearError = createAction(CLEAR_ERROR, false)
+export const clearError = basicAction(CLEAR_ERROR)
 // The field has been closed.
 export const CLOSE = 'field/CLOSE'
-export const close = createAction(CLOSE, false)
+export const close = basicAction(CLOSE)
+
 // Async error result. Sync errors should be calculated in container. See derivedState().
 export const ERROR = 'field/ERROR'
 export const error = createAction(ERROR)
@@ -32,13 +45,16 @@ export const saved = createAction(SAVED)
 
 // Record upload/save progress.
 export const SAVED_PROGRESS = 'field/SAVED_PROGRESS'
-export function savedProgress(prefix, valueOrEvent) {
-  const action = createAction(SAVED_PROGRESS)
-  const progress = getProgress(valueOrEvent)
-  return dispatch =>
-    (progress % 5 === 0 && dispatch(action(prefix, progress))) || false
-}
-export const saveProgress = actionCreate(SAVED_PROGRESS, flow(nthArg(1), getProgress), getMeta)
+export const saveProgress = curry((prefix, valueOrEvent) => createAction(
+  SAVED_PROGRESS, prefix, getProgress(valueOrEvent),
+))
+
+export const savedProgress = curry((prefix, valueOrEvent) => {
+  const action = saveProgress(prefix, valueOrEvent)
+  const progress = action.payload
+  return dispatch => (progress % 5 === 0 && dispatch(action(prefix, progress))) || false
+})
+
 // Similar to invalid. Save that a value is valid.
 export const VALID = 'field/VALID'
 export const valid = createAction(VALID)
@@ -47,23 +63,29 @@ export const valid = createAction(VALID)
 export const fieldEvent = {
   clear, clearError, close, error, invalid, meta, open, save, saved, savedProgress, valid,
 }
-export const getFieldEvents = mapPartial(fieldEvent)
+
+export const applyPrefix = actions => prefix => mapValues(callWith(prefix), actions)
+export const getFieldEvents = applyPrefix(fieldEvent)
 
 // FORM & FOCUS EVENTS
 export const BLUR = 'field/BLUR'
 export const onBlur = createAction(BLUR)
+
 // On every change of field value.
 export const CHANGE = 'field/CHANGE'
 export const onChange = createAction(CHANGE)
+export const onInput = onChange
+
 export const DRAG_ENTER = 'field/DRAG_ENTER'
 export const onDragEnter = createAction(DRAG_ENTER)
+
 export const DRAG_LEAVE = 'field/DRAG_LEAVE'
 export const onDragLeave = createAction(DRAG_LEAVE)
+
 // When a user clicks on a field to edit it.
 export const FOCUS = 'field/FOCUS'
-export const onFocus = createAction(FOCUS)
-// Alias of onChange.
-export const onInput = onChange
+export const onFocus = noopAction(FOCUS)
+
 // Submit, close, save.
 export const SUBMIT = 'field/SUBMIT'
 // @TODO Create timer to trigger error if doesn't submit.
@@ -73,15 +95,34 @@ export const onSubmit = createAction(SUBMIT)
 export const formEvent = {
   onBlur, onChange, onFocus, onInput, onSubmit,
 }
-export const getFormEvents = mapPartial(formEvent)
-export const formHandler = mapKeys(formEvent, (val, key) => key.replace('on', 'handle'))
-export const getFormHandlers = mapPartial(formHandler)
 
-export const getActions = memoize(
-  prefix => ({
-    fieldEvent: getFieldEvents(prefix),
-    formEvent: getFormEvents(prefix),
-    formHandler: getFormHandlers(prefix),
-  }),
-  prefix => prefix.toString()
-)
+export const getFormEvents = applyPrefix(formEvent)
+export const formHandler = mapKeys(replace('on', 'handle'), formEvent)
+export const getFormHandlers = applyPrefix(formHandler)
+
+// Save and reuse these.
+export const createActions = prefix => ({
+  fieldEvent: getFieldEvents(prefix),
+  formEvent: getFormEvents(prefix),
+  formHandler: getFormHandlers(prefix),
+})
+export const actions = createActions('default')
+export const actionTypes = {
+  CLEAR,
+  CLEAR_ERROR,
+  CLOSE,
+  ERROR,
+  INVALID,
+  META,
+  OPEN,
+  SAVE,
+  SAVED,
+  SAVED_PROGRESS,
+  VALID,
+  BLUR,
+  CHANGE,
+  DRAG_ENTER,
+  DRAG_LEAVE,
+  FOCUS,
+  SUBMIT,
+}

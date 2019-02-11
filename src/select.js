@@ -1,7 +1,9 @@
-import { flow, get, isFunction, nthArg, partial, property } from 'lodash'
+import {
+  flow, get, isFunction, nthArg, partial, property,
+} from 'lodash'
 import { concat, getOr } from 'lodash/fp'
 import { createSelector } from 'reselect'
-import { getProp, select } from 'cape-select'
+import { select } from 'cape-select'
 import { defaultState } from './reducer'
 import { createPrefix } from './utils'
 
@@ -63,23 +65,23 @@ export const selectField = (state, props) => getFormState(props)(state)
 export const selectFieldValue = flow(selectField, property('value'))
 export const calcFieldState = flow(selectField, derivedState)
 
-// Older stuff
-// Please note that it will return defaultState if there is an invalid prefix.
-export function selectFieldState(state, prefix, selectFormState = selectForm) {
-  return get(selectFormState(state), createPrefix(prefix), defaultState)
-}
-// Select prefix and selectForm from props.
-export function getFieldState(state, props) {
-  return selectFieldState(state, props.prefix, props.selectForm)
-}
-export const getState = createSelector(
-  getFieldState, getProp('initialValue'), getProp('validate'), derivedState
-)
-export function getFieldValue(state, prefix, selectFormState, prop = 'value') {
-  return get(selectFieldState(state, prefix, selectFormState), prop)
-}
+// // Older stuff
+// // Please note that it will return defaultState if there is an invalid prefix.
+// export function selectFieldState(state, prefix, selectFormState = selectForm) {
+//   return get(selectFormState(state), createPrefix(prefix), defaultState)
+// }
+// // Select prefix and selectForm from props.
+// export function getFieldState(state, props) {
+//   return selectFieldState(state, props.prefix, props.selectForm)
+// }
+// export const getState = createSelector(
+//   getFieldState, getProp('initialValue'), getProp('validate'), derivedState
+// )
+// export function getFieldValue(state, prefix, selectFormState, prop = 'value') {
+//   return get(selectFieldState(state, prefix, selectFormState), prop)
+// }
 
-// Returns selector.
-export function fieldValue(prefix, prop = 'value') {
-  return state => get(selectFieldState(state, prefix), prop)
-}
+// // Returns selector.
+// export function fieldValue(prefix, prop = 'value') {
+//   return state => get(selectFieldState(state, prefix), prop)
+// }

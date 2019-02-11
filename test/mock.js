@@ -1,10 +1,9 @@
-import immutable from 'seamless-immutable'
 import { combineReducers, createStore } from 'redux'
 import reducer, { REDUCER_KEY } from '../src'
 
 export const store = createStore(combineReducers({ [REDUCER_KEY]: reducer }))
 
-export const emptyGetStateResult = immutable({
+export const emptyGetStateResult = {
   blur: false,
   dragCount: 0,
   error: null,
@@ -32,7 +31,7 @@ export const emptyGetStateResult = immutable({
   valid: {},
   validValue: null,
   value: null,
-})
+}
 export const fieldEvent = [
   'clear', 'clearError', 'close', 'error', 'invalid',
   'meta', 'open', 'save', 'saved', 'savedProgress', 'valid',

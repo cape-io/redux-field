@@ -1,10 +1,12 @@
-# redux-field 5.1.2
+# redux-field
 
-[![Build Status](https://travis-ci.org/cape-io/redux-field.svg?branch=master)](https://travis-ci.org/cape-io/redux-field)
+A Redux reducer and actions to help create controlled input fields.
 
-For when you want to control individual form fields with redux. Think something like https://vitalets.github.io/x-editable/ for Redux.
+Sometimes you just have a single field that you want to keep track of without having to create custom actions. Or when you want to control individual form fields like https://vitalets.github.io/x-editable/ with Redux.
 
-Nothing should stop you from using the same reducer/actions for an entire form.
+If you want to save form progress one field at a time locally or direct to server this is for you.
+
+This library can help make it easier to have the user edit fields inside a table grid.
 
 ## Usage
 
@@ -34,7 +36,7 @@ If you want to wrap a React component that injects actions and props look at the
 * `savedProgress`: `0` - Percentage. Integer between 0-99.
 * `savedValue`: `null` - If the backend changes the value and you want to show the difference you can place that updated value here.
 * `isSaving`: `false` - Is there an active request attempting to save the field value?
-* `isTouched`: `false` - Have there been interactions with the field.
+* `isTouched`: `false` - Have there been blur, drag, focus, open, close, or value interactions with the field. Running submit on an otherwise untouched leaves it untouched.
 * `valid`: `{}` - Index of known valid values. Responses from a backend or API.
 * `value`: `null` - The value of the field goes here. Probably the most important state property.
 
@@ -80,7 +82,7 @@ Actions related to the field and/or its container.
 * `error` - Async error result. Sync errors should be calculated in container. See `derivedState()`.
 * `invalid` - Set values that are known invalid. Useful to keep track of previous results from API calls. Makes feedback faster and prevents unnecessary requests..
 * `meta` - Set metadata about the editing process or field. Here if you need a place to put extra information.
-* `open` - The first thing that is called to initiate editing of a field. Toggle the preview and input displays of a field.
+* `open` - The first thing that is called to initiate editing of a field. Toggle the preview and input displays of a field. You can overwrite `id` `value`, and `initialValue` here.
 * `save` - When an async request has been made that is saving the updated value to the server.
 * `saved` - Current value has been saved.
 * `savedProgress` - Record upload/save progress. If saving a file and you want to keep track of how much has been uploaded.
@@ -88,7 +90,7 @@ Actions related to the field and/or its container.
 
 #### `formHandler`
 
-Same as `formEvent` but `on` replaced with `handle`.  
+Same as `formEvent` but `on` replaced with `handle`.
 `handleBlur, handleChange, handleDragEnter, handleDragLeave, handleFocus, handleInput, handleSubmit`
 
 ## Selectors

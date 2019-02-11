@@ -1,5 +1,10 @@
-import { curry, has, noop, isArray, isEmpty, isObject, isString, mapValues, partial } from 'lodash'
-import { createAction as actionCreate, getPayload } from 'cape-redux'
+import {
+  at, curry, divide, every, flow,
+  isArray, isEmpty, isNumber, isObject, isString, mapValues, multiply,
+  parseInt, round, spread, stubFalse,
+} from 'lodash/fp'
+import { callWith, overBranch } from 'understory'
+import { getPayload } from 'cape-redux'
 
 export const PREFIX = 'default'
 
@@ -16,10 +21,6 @@ export function createPrefix(prefix) {
   return [PREFIX]
 }
 
-export function getMeta(prefixRaw, payload, extraMeta) {
-  const prefix = createPrefix(prefixRaw)
-  return isObject(extraMeta) ? { ...extraMeta, prefix } : { prefix }
-}
 export function preventDefault(event) {
   if (event && event.preventDefault) event.preventDefault()
 }
@@ -31,20 +32,21 @@ export function createPayload(prefix, payload) {
   }
   return getPayload(payload)
 }
-export function createAction(type, hasPayload = true) {
-  return actionCreate(type, hasPayload ? createPayload : noop, getMeta)
+
+export const progPercent = flow(spread(divide), multiply(100), round)
+export const progress = (progressKey, totalKey) => flow(
+  at([progressKey, totalKey]),
+  overBranch(every(isNumber), progPercent, stubFalse),
+)
+// parseInt((progress / total) * 100, 10)
+export const eventProg = progress('loaded', 'total')
+export const fireProg = progress('bytesTransferred', 'totalBytes')
+export function objProg(status) {
+  let res = eventProg(status)
+  if (res === false) res = fireProg(status)
+  if (res === false) throw new Error('Unable to get progress from event object.')
+  return res
 }
-export function roundNumber(progress, total) {
-  return parseInt((progress / total) * 100, 10)
-}
-export function getProgress(value) {
-  if (isObject(value)) {
-    const hasProp = partial(has, value)
-    if (hasProp('loaded') && hasProp('total')) return roundNumber(value.loaded, value.total)
-    if (hasProp('bytesTransferred') && hasProp('totalBytes')) {
-      return roundNumber(value.bytesTransferred, value.totalBytes)
-    }
-  }
-  return parseInt(value, 10)
-}
-export const mapPartial = curry((obj, arg0) => mapValues(obj, func => partial(func, arg0)))
+export const getProgress = overBranch(isObject, objProg, parseInt(10))
+
+export const mapPartial = curry((obj, arg) => mapValues(callWith(arg), obj))

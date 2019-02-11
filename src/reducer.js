@@ -1,7 +1,9 @@
-import immutable from 'seamless-immutable'
-import { flow, get, isArray, property } from 'lodash'
-import { gte } from 'lodash/fp'
-import { condId } from 'cape-lodash'
+import {
+  add, defaultTo, flow, get, getOr, gte, isArray, isUndefined,
+  merge, negate, pick, set, update,
+} from 'lodash/fp'
+import { overBranch, subtrahend } from 'understory'
+import { mergeWith, setIn } from 'prairie'
 import { createReducer, noReducerOfType } from 'cape-redux'
 import {
   CLEAR, CLEAR_ERROR, CLOSE, ERROR, INVALID, META, OPEN, SAVE, SAVED_PROGRESS, SAVED, VALID,
@@ -9,7 +11,7 @@ import {
 } from './actions'
 
 // Only keeping state we can not calculate. See derivedState().
-export const defaultState = immutable({
+export const defaultState = {
   blur: false, // When true the field is open but does not have focus.
   dragCount: 0, // For keeping track of entering children but maintaining focus.
   error: null, // String usually. Could be object for more complex error.
@@ -24,103 +26,117 @@ export const defaultState = immutable({
   isTouched: false,
   valid: {}, // index of valid values.
   value: null, // Anything.
-})
-export const getDragCount = property('dragCount')
+}
 
-export const blurReducer = (state, payload) => state.merge({
+export const setBlur = mergeWith({
   blur: true,
   dragCount: 0,
   focus: false,
   isTouched: true,
-  value: payload || state.value,
 })
-export const closeReducer = state => state.merge({
-  blur: defaultState.blur,
-  focus: defaultState.focus,
-  isTouched: true,
-})
-export const applyError = (state, payload) => state.merge({
-  error: payload,
-  isTouched: true,
-})
+
+export const resetFields = fields => mergeWith(pick(fields, defaultState))
+
+export const getDragCount = get('dragCount')
+
+export const setFocus = mergeWith({ blur: false, focus: true, isTouched: true })
+export const setClose = resetFields(['blur', 'focus'])
+
+export const saving = set('isSaving', true)
+export const setValue = (state, payload) => (
+  isUndefined(payload) ? state : set('value', payload, state)
+)
+export const touched = overBranch(negate(get('isTouched')), set('isTouched', true))
+
+export const blurReducer = flow(setValue, setBlur)
+
+export const closeReducer = flow(setClose, touched)
+
+export const applyError = flow(setIn('error'), touched)
+
+export const clearError = set('error', defaultState.error)
 export const errorReducer = (state, payload) => {
   if (payload.error && payload.value) {
-    return blurReducer(applyError(state, payload.error), payload.value)
+    return setValue(applyError(state, payload.error), payload.value)
   }
   return applyError(state, payload)
 }
-export const focusReducer = state => state.merge({
-  blur: false,
-  focus: true,
-  isTouched: true,
-})
-export const dragEnterReducer = flow(focusReducer,
-  state => state.set('dragCount', state.dragCount + 1)
+
+export const dragEnterReducer = flow(
+  setFocus,
+  update('dragCount', add(1)),
 )
 
 export const dragLeaveReducer = flow(
-  state => state.set('dragCount', state.dragCount - 1),
-  condId([flow(getDragCount, gte(0)), blurReducer])
+  update('dragCount', subtrahend(1)),
+  overBranch(flow(getDragCount, gte(0)), blurReducer),
 )
-export const openReducer = (state, payload = {}) => state.merge({
-  focus: true,
-  id: payload.id || defaultState.id,
-  initialValue: state.initialValue || payload.initialValue || null,
-  isTouched: true,
-  value: state.value || payload.initialValue || null,
-})
-export const savedReducer = (state, payload) => state.merge({
-  error: defaultState.error,
-  id: get(payload, 'id', state.id),
-  isSaving: defaultState.isSaving,
-  savedProgress: defaultState.savedProgress,
-  savedValue: get(payload, 'value', state.value),
-})
-export const set = fieldId => (state, payload) => state.set(fieldId, payload)
-export const setVal = (fieldId, value) => state => state.set(fieldId, value)
-export const saveReducer = setVal('isSaving', true)
-export const saveProgressReducer = flow(set('savedProgress'), saveReducer)
 
-export const submitReducer = (state, payload) => state.merge({
-  blur: defaultState.blur,
-  error: defaultState.error,
-  focus: defaultState.focus,
-  isSaving: true,
-  value: payload || state.value,
+// Can not overwrite value.
+export const openReducer = (state, payload = {}) => ({
+  ...state,
+  focus: true,
+  id: defaultTo(defaultTo(null, state.id), payload.id),
+  initialValue: defaultTo(
+    defaultTo(defaultTo(null, state.value), state.initialValue),
+    payload.initialValue,
+  ),
+  isTouched: true,
+  value: defaultTo(defaultTo(null, payload.initialValue), state.value),
 })
+
+export const setSaved = resetFields(['error', 'isSaving', 'savedProgress'])
+
+export const savedReducer = (state, payload) => ({
+  ...setSaved(state),
+  id: getOr(state.id, 'id', payload),
+  initialValue: state.value,
+  savedValue: getOr(state.value, 'value', payload),
+  value: getOr(state.value, 'value', payload),
+})
+export const saveProgressReducer = flow(setIn('savedProgress'), saving)
+
+export const submitReducer = flow(
+  setValue,
+  setClose,
+  saving,
+)
+export const metaReducer = ({ meta, ...state }, payload) => ({
+  ...state,
+  isTouched: true,
+  meta: merge(meta, payload),
+})
+export const changeReducer = flow(setIn('value'), set('isTouched', true))
 
 export const reducers = {
   [CLEAR]: () => defaultState,
-  [CLEAR_ERROR]: state => state.set('error', defaultState.error),
+  [CLEAR_ERROR]: clearError,
   // Should close also change initialValue?
   [CLOSE]: closeReducer,
   [ERROR]: errorReducer,
-  [INVALID]: (state, payload) => state.setIn(['invalid', payload.key], payload.value),
-  [META]: (state, payload) => state.merge({ meta: payload, isTouched: true }, { deep: true }),
+  [INVALID]: (state, payload) => set(['invalid', payload.key], payload.value, state),
+  [META]: metaReducer,
   [OPEN]: openReducer,
-  [SAVE]: saveReducer,
+  [SAVE]: saving,
   [SAVED_PROGRESS]: saveProgressReducer,
   [SAVED]: savedReducer,
   // This is another spot you could save meta data about a particular value.
-  [VALID]: (state, payload) => state.setIn(['valid', payload.key], payload.value),
+  [VALID]: (state, payload) => set(['valid', payload.key], payload.value, state),
   [BLUR]: blurReducer,
-  [CHANGE]: (state, payload) => state.merge({ isTouched: true, value: payload }),
+  [CHANGE]: changeReducer,
   [DRAG_ENTER]: dragEnterReducer,
   [DRAG_LEAVE]: dragLeaveReducer,
-  [FOCUS]: focusReducer,
+  [FOCUS]: setFocus,
   [SUBMIT]: submitReducer,
 }
-const options = { makeImmutable: true, skipErrors: false }
-export const fieldReducer = createReducer(reducers, defaultState, options)
-export function asImmutable(state) {
-  return state.asMutable ? state : immutable(state)
-}
-export default function reducer(state = immutable({}), action) {
+
+export const fieldReducer = createReducer(reducers, defaultState, { skipErrors: false })
+export default function reducer(state = {}, action) {
   if (noReducerOfType(reducers)(action)) return state
   if (!isArray(action.meta.prefix)) throw new Error('Action must contain meta.prefix array.')
   // Get the state slice we need for this action.
   const oldFieldState = get(state, action.meta.prefix)
   const newFieldState = fieldReducer(oldFieldState, action)
   if (oldFieldState === newFieldState) return state
-  return asImmutable(state).setIn(action.meta.prefix, newFieldState)
+  return set(action.meta.prefix, newFieldState, state)
 }
