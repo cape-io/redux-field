@@ -992,13 +992,13 @@ cape-redux@^3.3.0:
     lodash "^4.17.11"
     redux "^4.0.1"
 
-cape-select@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/cape-select/-/cape-select-3.0.0.tgz#06b5a270cd6ac564050808669b2ee675a7df8d15"
-  integrity sha512-XAqzRmY/2gQ5kbpHs9xgrgJY5+KgkNElsrjRGfPPcXDUKPLNjg7upz48OmD78piY2IM71qTZXz9SKfHvKH5e+w==
+cape-select@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/cape-select/-/cape-select-3.1.0.tgz#602f647193a367ad24d68c92f1ea03a6cce68be0"
+  integrity sha512-qnBHWWxRDcOmMC83Ns2mLJFcvuhevsZ1jT1g7zGVjkV4BOjjZvYiVCGVKs9s7Lw7/odwyHjcLy0TJuEUD+hb6Q==
   dependencies:
     lodash "^4.17.11"
-    understory "^1.3.0"
+    understory "^1.3.1"
 
 capture-exit@^1.2.0:
   version "1.2.0"
@@ -4703,10 +4703,17 @@ uglify-js@^3.1.4:
     commander "~2.17.1"
     source-map "~0.6.1"
 
-understory@^1.1.1, understory@^1.3.0:
+understory@^1.1.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/understory/-/understory-1.3.0.tgz#8e9868f01db85e8cc14e340013ebf79a4c3f4541"
   integrity sha512-d5AxJ7HaS8Fv7x/Gt6ipGYtljCoLdK2qHAPgLa2wDMh8QR4NSujWbzTb87lwSheqdx/mPod4JieLk8gEiGiKGw==
+  dependencies:
+    lodash "^4.17.11"
+
+understory@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/understory/-/understory-1.3.1.tgz#6c9e38fa70bdf1192884af378ca5550ce868c1eb"
+  integrity sha512-nFGbfYqElPEv2G48LWfyemVHPAYn/t2PDSKriRgSINhweyUyiQNMl0NYDQqLfdg3fHdknkzf6+HTyP41XN3FkQ==
   dependencies:
     lodash "^4.17.11"
 
