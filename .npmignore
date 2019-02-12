@@ -1,3 +1,6 @@
 src/
 test/
 examples/
+.travis.yml
+yarn-error.log
+yarn.lock

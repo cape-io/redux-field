@@ -1,18 +1,17 @@
 import {
-  flow, get, isFunction, nthArg, partial, property,
-} from 'lodash'
-import { concat, getOr } from 'lodash/fp'
-import { createSelector } from 'reselect'
+  concat, flow, get, getOr, isFunction, nthArg, partial,
+} from 'lodash/fp'
+
 import { select } from 'cape-select'
 import { defaultState } from './reducer'
 import { createPrefix } from './utils'
 
 export const REDUCER_KEY = 'form'
 
-export const selectForm = property(REDUCER_KEY)
+export const selectForm = get(REDUCER_KEY)
 
 // fieldSelector(prefixArray)(state)
-export const getFieldSelector = partial(select, selectForm)
+export const getFieldSelector = partial(select, [selectForm])
 
 export function getErrorVal(state, { pristine, validate }) {
   if (pristine && !state.error) return null
@@ -57,12 +56,12 @@ export function derivedState(state, initialValue, validate) {
 // }
 
 // The new core of selecting state based on prefix.
-export const getPrefix = property('prefix')
+export const getPrefix = get('prefix')
 export const selectPrefix = flow(nthArg(1), getPrefix, createPrefix)
 export const fieldSelector = flow(createPrefix, concat(REDUCER_KEY), getOr(defaultState))
 export const getFormState = flow(getPrefix, fieldSelector)
 export const selectField = (state, props) => getFormState(props)(state)
-export const selectFieldValue = flow(selectField, property('value'))
+export const selectFieldValue = flow(selectField, get('value'))
 export const calcFieldState = flow(selectField, derivedState)
 
 // // Older stuff

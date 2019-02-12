@@ -21,14 +21,14 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "mkdir -p lib && babel ./src -d lib",
+    "build": "babel ./src -d lib",
     "lint": "eslint examples src test",
     "prepublish": "npm run build",
     "test": "jest --watch"
   },
   "dependencies": {
-    "cape-redux": "^3.1.0",
-    "cape-select": "^2.4.0",
+    "cape-redux": "^3.3.0",
+    "cape-select": "^3.0.0",
     "lodash": "^4.17.11",
     "prairie": "^3.4.0",
     "redux": "^4.0.1",
