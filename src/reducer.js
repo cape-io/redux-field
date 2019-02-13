@@ -1,5 +1,5 @@
 import {
-  add, defaultTo, flow, get, getOr, gte, isArray, isUndefined,
+  add, defaultTo, flow, get, getOr, gte, isArray, isEmpty, isUndefined,
   merge, negate, pick, set, update,
 } from 'lodash/fp'
 import { overBranch, subtrahend } from 'understory'
@@ -28,13 +28,6 @@ export const defaultState = {
   value: null, // Anything.
 }
 
-export const setBlur = mergeWith({
-  blur: true,
-  dragCount: 0,
-  focus: false,
-  isTouched: true,
-})
-
 export const resetFields = fields => mergeWith(pick(fields, defaultState))
 
 export const getDragCount = get('dragCount')
@@ -46,8 +39,13 @@ export const saving = set('isSaving', true)
 export const isNewValue = (state, payload) => (!isUndefined(payload) && payload !== state.value)
 export const setValue = overBranch(isNewValue, setIn('value'))
 export const touched = overBranch(negate(get('isTouched')), set('isTouched', true))
+export const changeReducer = flow(setValue, touched)
 
-export const blurReducer = flow(setValue, setBlur)
+export const blurReducer = flow(
+  changeReducer,
+  resetFields(['dragCount', 'focus']),
+  set('blur', true),
+)
 
 export const closeReducer = flow(setClose, touched)
 
@@ -106,8 +104,6 @@ export const metaReducer = ({ meta, ...state }, payload) => ({
   meta: merge(meta, payload),
 })
 
-export const changeReducer = flow(setValue, touched)
-
 export const reducers = {
   [CLEAR]: () => defaultState,
   [CLEAR_ERROR]: clearError,
@@ -133,10 +129,13 @@ export const reducers = {
 export const fieldReducer = createReducer(reducers, defaultState, { skipErrors: false })
 export default function reducer(state = {}, action) {
   if (noReducerOfType(reducers)(action)) return state
-  if (!isArray(action.meta.prefix)) throw new Error('Action must contain meta.prefix array.')
+  if (!isArray(action.meta.prefix) || isEmpty(action.meta.prefix)) {
+    throw new Error('Action must contain meta.prefix array.')
+  }
   // Get the state slice we need for this action.
-  const oldFieldState = get(state, action.meta.prefix)
+  const oldFieldState = get(action.meta.prefix, state)
   const newFieldState = fieldReducer(oldFieldState, action)
   if (oldFieldState === newFieldState) return state
+  // console.log(get('value', oldFieldState), newFieldState.value)
   return set(action.meta.prefix, newFieldState, state)
 }

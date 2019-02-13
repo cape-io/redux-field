@@ -1,3 +1,9 @@
+## [6.0.4]
+
+* Memoize `applyPrefix` based on prefix. Convert array prefix values to string to help memoize.
+* `getPrefix` selector will use `prefix` or `id` prop.
+* fix get of `oldFieldState`.
+
 ## [6.0.3]
 
 * Fix payload when action is sent an event.

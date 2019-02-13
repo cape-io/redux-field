@@ -1,6 +1,6 @@
 // import { flow } from 'lodash/fp'
 import reducer, {
-  close, onChange, onDragEnter, onDragLeave, onSubmit, open,
+  close, onBlur, onChange, onDragEnter, onDragLeave, onFocus, onSubmit, open,
   saveProgress, savedProgress, selectFieldState,
 } from '.'
 
@@ -37,13 +37,29 @@ describe('getDragCount', () => {
 })
 
 describe('blurReducer', () => {
-  test('simple get of value', () => {
-    expect(blurReducer({ blur: false, dragCount: 2, value: 'foo' }, 'bar')).toEqual({
+  test('update value', () => {
+    const state = { blur: false, dragCount: 2, value: 'foo' }
+    expect(blurReducer(state, 'bar')).toEqual({
       blur: true,
       dragCount: 0,
       focus: false,
       isTouched: true,
       value: 'bar',
+    })
+    expect(blurReducer({ blur: false, dragCount: 2, value: null }, '')).toEqual({
+      blur: true,
+      dragCount: 0,
+      focus: false,
+      isTouched: true,
+      value: '',
+    })
+  })
+  test('blur reducer', () => {
+    const state = reducer(undefined, onBlur('example', { nativeEvent: {}, target: {} }))
+    expect(state).toEqual({
+      example: {
+        ...defaultState, value: '', blur: true, isTouched: true,
+      },
     })
   })
 })
@@ -177,7 +193,29 @@ describe('focusReducer', () => {
     })
     expect(setFocus(res2)).toEqual({ ...res, dragCount: 0 })
   })
+  test('leave value alone', () => {
+    const res2 = {
+      blur: false, focus: true, isTouched: true, value: '',
+    }
+    expect(setFocus({ value: '' })).toEqual(res2)
+    expect(setFocus(blurReducer(res2, ''))).toEqual({ ...res2, dragCount: 0 })
+  })
+  test('focus action', () => {
+    let state = reducer(undefined, onFocus('example')())
+    expect(state).toEqual({ example: { ...defaultState, ...res } })
+    state = reducer(state, onBlur('example', { nativeEvent: {}, target: {} }))
+    expect(state).toEqual({
+      example: {
+        ...defaultState, value: '', blur: true, isTouched: true,
+      },
+    })
+    expect(state.example.value).toBe('')
+    state = reducer(state, onFocus('example')())
+    expect(state.example.value).toBe('')
+    expect(state).toEqual({ example: { ...defaultState, ...res, value: '' } })
+  })
 })
+
 describe('applyError', () => {
   const errStr = 'error msg'
   const res = { error: errStr, isTouched: true }

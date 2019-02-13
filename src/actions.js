@@ -1,5 +1,5 @@
 import {
-  constant, curry, mapKeys, mapValues, replace, set,
+  constant, curry, flow, join, mapKeys, mapValues, memoize, replace, set,
 } from 'lodash/fp'
 import { callWith } from 'understory'
 import {
@@ -64,7 +64,11 @@ export const fieldEvent = {
   clear, clearError, close, error, invalid, meta, open, save, saved, savedProgress, valid,
 }
 
-export const applyPrefix = actions => prefix => mapValues(callWith(prefix), actions)
+export const applyPrefix = actions => flow(
+  createPrefix,
+  join('.'),
+  memoize(prefix => mapValues(callWith(prefix), actions)),
+)
 export const getFieldEvents = applyPrefix(fieldEvent)
 
 // FORM & FOCUS EVENTS
