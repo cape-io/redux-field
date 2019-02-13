@@ -3,6 +3,10 @@
 * Fix payload when action is sent an event.
 * Do not replace state object when value is undefined or unchanged.
 
+## [6.0.0]
+
+* 2019 Cleanup. Package updates, remove clutter.
+
 ## [5.1.2]
 
 * `calcFieldState()` selector

@@ -1,4 +1,4 @@
-import { flow } from 'lodash/fp'
+// import { flow } from 'lodash/fp'
 import reducer, {
   close, onChange, onDragEnter, onDragLeave, onSubmit, open,
   saveProgress, savedProgress, selectFieldState,
