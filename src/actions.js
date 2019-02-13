@@ -3,7 +3,7 @@ import {
 } from 'lodash/fp'
 import { callWith } from 'understory'
 import {
-  createPrefix, getProgress,
+  createPrefix, createPayload, getProgress,
 } from './utils'
 
 const basicAction = curry((type, prefix) => ({
@@ -11,7 +11,7 @@ const basicAction = curry((type, prefix) => ({
 }))
 const noopAction = curry((type, prefix) => constant(basicAction(type, prefix)))
 const createAction = curry((type, prefix, payload) => set(
-  'payload', payload, basicAction(type, prefix),
+  'payload', createPayload(payload), basicAction(type, prefix),
 ))
 
 // Close the field. Reset all values to default.

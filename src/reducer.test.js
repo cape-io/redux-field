@@ -5,12 +5,30 @@ import reducer, {
 } from '.'
 
 import {
-  blurReducer, applyError, closeReducer,
+  blurReducer, applyError, changeReducer, closeReducer,
   defaultState, dragEnterReducer, dragLeaveReducer, errorReducer,
-  getDragCount, openReducer, saveProgressReducer, setFocus, submitReducer,
+  getDragCount, openReducer, saveProgressReducer, setFocus, setValue, submitReducer,
 } from './reducer'
 
 /* globals describe test expect */
+describe('setValue', () => {
+  test('leave state untouched when undefined new value', () => {
+    const state = {}
+    expect(setValue(state)).toBe(state)
+    expect(setValue(state, undefined)).toBe(state)
+    expect(setValue(state, null)).not.toBe(state)
+  })
+  test('leave state untouched when value matches state', () => {
+    const state = { value: 'foo' }
+    expect(setValue(state, 'foo')).toBe(state)
+  })
+  test('replace state when new value', () => {
+    const state = { value: 'foo' }
+    const update = setValue(state, 'bar')
+    expect(update).not.toBe(state)
+    expect(update).toEqual({ value: 'bar' })
+  })
+})
 
 describe('getDragCount', () => {
   test('sets blur and focus to false', () => {
@@ -90,6 +108,24 @@ describe('closeReducer', () => {
       ...res,
       value: 1,
     })
+  })
+})
+describe('changeReducer', () => {
+  test('replace when untouched but value match', () => {
+    const state = { value: 'foo' }
+    const change = changeReducer(state, 'foo')
+    expect(change).not.toBe(state)
+    expect(change).toEqual({ value: 'foo', isTouched: true })
+  })
+  const state = { value: 'foo', isTouched: true }
+  test('ignore when touched and value match', () => {
+    const change = changeReducer(state, 'foo')
+    expect(change).toBe(state)
+  })
+  test('replace when new value', () => {
+    const change = changeReducer(state, 'bar')
+    expect(change).not.toBe(state)
+    expect(change).toEqual({ value: 'bar', isTouched: true })
   })
 })
 describe('reducer open close', () => {

@@ -24,7 +24,7 @@ export function createPrefix(prefix) {
 export function preventDefault(event) {
   if (event && event.preventDefault) event.preventDefault()
 }
-export function createPayload(prefix, payload) {
+export function createPayload(payload) {
   if (!payload) return payload
   preventDefault(payload)
   if (payload.target && payload.nativeEvent) {

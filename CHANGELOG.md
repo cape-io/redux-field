@@ -1,3 +1,8 @@
+## [6.0.3]
+
+* Fix payload when action is sent an event.
+* Do not replace state object when value is undefined or unchanged.
+
 ## [5.1.2]
 
 * `calcFieldState()` selector

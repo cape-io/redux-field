@@ -43,9 +43,8 @@ export const setFocus = mergeWith({ blur: false, focus: true, isTouched: true })
 export const setClose = resetFields(['blur', 'focus'])
 
 export const saving = set('isSaving', true)
-export const setValue = (state, payload) => (
-  isUndefined(payload) ? state : set('value', payload, state)
-)
+export const isNewValue = (state, payload) => (!isUndefined(payload) && payload !== state.value)
+export const setValue = overBranch(isNewValue, setIn('value'))
 export const touched = overBranch(negate(get('isTouched')), set('isTouched', true))
 
 export const blurReducer = flow(setValue, setBlur)
@@ -106,7 +105,8 @@ export const metaReducer = ({ meta, ...state }, payload) => ({
   isTouched: true,
   meta: merge(meta, payload),
 })
-export const changeReducer = flow(setIn('value'), set('isTouched', true))
+
+export const changeReducer = flow(setValue, touched)
 
 export const reducers = {
   [CLEAR]: () => defaultState,
